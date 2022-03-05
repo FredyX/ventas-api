@@ -1,11 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const apiRouter = require('./routers/api');
 const app = express();
-app.get('/', (req, res) => {
-    res.send('Hola mundo');
-});
+
+require('./config/db.config');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use('/api',apiRouter);
 app.listen( 3000, () => {
-    console.log('servidor arrancar');
+    console.log('servidor arranco correctamente');
 });
