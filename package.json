@@ -1,0 +1,28 @@
+{
+  "name": "ventas-api",
+  "version": "1.0.0",
+  "description": "Api rest ventas-unah",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FredyX/ventas-api.git"
+  },
+  "keywords": [
+    "api"
+  ],
+  "author": "grupo_4",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FredyX/ventas-api/issues"
+  },
+  "homepage": "https://github.com/FredyX/ventas-api#readme",
+  "dependencies": {
+    "body-parser": "^1.19.2",
+    "express": "^4.17.3",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.17.0"
+  }
+}
