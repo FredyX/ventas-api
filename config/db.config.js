@@ -1,20 +1,28 @@
 const Sequelize = require('sequelize');
-/*
-const sequelize = new  Sequelize('adming4@ventas-unah','ventashn','grupo4unah@',{
-    host: 'ventas-unah.mysql.database.azure.com',
-    dialect: 'mysql'
-});
 
-*/
+const dbConfig = {
+    host: 'ventas-unah.mysql.database.azure.com',
+    dialect: 'mysql',
+    username: 'adming4@ventas-unah',
+    password: 'grupo4unah@',
+    database: 'ventashn',
+}
 
 const UsersModel = require('../models/users');
 
-const sequelize = new Sequelize('ventashn','adming4@ventas-unah','grupo4unah@',{
-    host: 'ventas-unah.mysql.database.azure.com',
-    dialect:'mysql'
+const sequelize = new Sequelize(dbConfig.database,dbConfig.username,dbConfig.password,{
+    host: dbConfig.host,
+    dialect:dbConfig.dialect,
+    pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+    }
 });
 
 const Users = UsersModel(sequelize, Sequelize);
+
 sequelize.sync({force: false})
     .then(()=> {
         console.log('Tablas sicronizadas');
@@ -22,7 +30,6 @@ sequelize.sync({force: false})
     .catch(() => {
         console.log('Error');
     });
-  
 
 module.exports = {
     Users
