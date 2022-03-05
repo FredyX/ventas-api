@@ -9,9 +9,8 @@ const sequelize = new  Sequelize('adming4@ventas-unah','ventashn','grupo4unah@',
 
 const UsersModel = require('../models/users');
 
-const sequelize = new Sequelize('prueba','admin','admin',{
-    host: 'localhost',
-    port: '3306',
+const sequelize = new Sequelize('ventashn','adming4@ventas-unah','grupo4unah@',{
+    host: 'ventas-unah.mysql.database.azure.com',
     dialect:'mysql'
 });
 
