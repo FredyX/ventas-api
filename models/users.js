@@ -40,10 +40,9 @@ module.exports = (sequelize, type) => {
         department_id : {
             type: type.INTEGER(11),
             allowNull:false,
-        },
-        
+        }
     },
-    { 
+    {
         timestamps: false
     });
 }

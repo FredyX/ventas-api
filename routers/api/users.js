@@ -20,6 +20,38 @@ router.get('/:id', async (req, res) => {
 }
 );
 
+//OBTENER USUARIO POR ID CON LOS DATOS PARA EL PERFIL
+router.get('/profile/:id', async (req, res) => {
+    const user = await Users.findOne({
+        where: { id: req.params.id },
+    });
+    /*
+    const profile_picture = await Profile_pictures.findOne({
+        where: { id: user.profile_picture_id }
+    });
+    let products = await Products.findAll({
+        where: { user_id: user.id }
+    });
+    products = products.map(product => {
+        return {
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            price: product.price
+        } 
+    } );*/
+    const data = {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        score : user.score,
+        profile_picture: user.profile_picture_id //profile_picture.pp_data,
+        //products
+    };
+    res.json(data);
+}
+);
+
+
 //OBTENER USUARIO POR NOMBRE
 router.get('/:firt_name', async (req, res) => {
     const user = await Users.findOne({
