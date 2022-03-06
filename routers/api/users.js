@@ -49,10 +49,8 @@ router.post('/register',[
 
 router.post('/login', async (req,res) =>{
     const user = await Users.findOne({where:{user_email: req.body.user_email}});
-    console.log(user.user_password,'  ',req.body.user_password);
     if(user){
-        const match = bcrypt.compareSync(req.body.user_password, user.user_password);
-        console.log(match);
+        const match = bcrypt.compareSync(req.body.user_password, user.user_password);        
         if(match){
             res.json({ success:createToken(user)});
         }else{

@@ -13,9 +13,9 @@ module.exports = (sequelize, type) => {
             type: type.STRING(20),
             allowNull:false
         },
-        profile_pic : {
+        profile_picture_id : {
             type: type.INTEGER,
-            allowNull:false
+            defaultValue: 2            
         },
         user_email : {
             type: type.STRING(50),
@@ -31,16 +31,19 @@ module.exports = (sequelize, type) => {
         },
         is_admin : {
             type: type.BOOLEAN,
-            allowNull:false,
-            defaultValue: false
+            defaultValue: 0
         },
         score : {
-            type: type.INTEGER,
+            type: type.INTEGER(11),
             defaultValue: 0
         },
         department_id : {
-            type: type.INTEGER,
+            type: type.INTEGER(11),
             allowNull:false,
-        }
+        },
+        
+    },
+    { 
+        timestamps: false
     });
 }
