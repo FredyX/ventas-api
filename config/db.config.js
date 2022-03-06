@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-
+/*
 const dbConfig = {
     host: 'ventas-unah.mysql.database.azure.com',
     dialect: 'mysql',
@@ -7,7 +7,14 @@ const dbConfig = {
     password: 'grupo4unah@',
     database: 'ventashn',
 }
-
+*/
+const dbConfig = {
+    host: 'localhost',
+    dialect: 'mysql',
+    username: 'admin',
+    password: 'admin',
+    database: 'prueba',
+}
 const UsersModel = require('../models/users');
 
 const sequelize = new Sequelize(dbConfig.database,dbConfig.username,dbConfig.password,{

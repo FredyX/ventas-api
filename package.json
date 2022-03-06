@@ -20,8 +20,12 @@
   },
   "homepage": "https://github.com/FredyX/ventas-api#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.2",
     "express": "^4.17.3",
+    "express-validator": "^6.14.0",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.29.1",
     "mysql2": "^2.3.3",
     "sequelize": "^6.17.0"
   }

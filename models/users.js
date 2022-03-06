@@ -22,7 +22,7 @@ module.exports = (sequelize, type) => {
             allowNull:false
         },
         user_password : {
-            type: type.STRING(50),
+            type: type.STRING(300),
             allowNull:false
         },
         is_company : {
