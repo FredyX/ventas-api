@@ -34,11 +34,11 @@ module.exports = (sequelize, type) => {
             defaultValue: 0
         },
         score : {
-            type: type.INTEGER(11),
+            type: type.INTEGER,
             defaultValue: 0
         },
         department_id : {
-            type: type.INTEGER(11),
+            type: type.INTEGER,
             allowNull:false,
         }
     },

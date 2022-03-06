@@ -51,7 +51,6 @@ router.get('/profile/:id', async (req, res) => {
 }
 );
 
-
 //OBTENER USUARIO POR NOMBRE
 router.get('/:firt_name', async (req, res) => {
     const user = await Users.findOne({
@@ -60,7 +59,7 @@ router.get('/:firt_name', async (req, res) => {
     res.json(user);
 }
 );
-
+//REGISTRA EL USUARIO EN LA BASE DE DATOS
 router.post('/register',[
         check('user_email','El correo es obligatorio').not().isEmpty(),
         check('user_password', 'El password es incorrecto').not().isEmpty()
