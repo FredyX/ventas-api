@@ -13,7 +13,7 @@ module.exports = (sequelize, type) => {
             type: type.STRING(20),
             allowNull:false
         },
-        profile_pic : {
+        profile_picture_id : {
             type: type.INTEGER,
             allowNull:false
         },
@@ -42,5 +42,8 @@ module.exports = (sequelize, type) => {
             type: type.INTEGER,
             allowNull:false,
         }
+    },
+    {
+        timestamps: false
     });
 }
