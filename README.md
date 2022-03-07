@@ -3,9 +3,10 @@ API VENTAS_HN
 
 |Métodos| Urls  | Acciones|
 |:-----:|-------| --------|
+|  GET  | api/profile_pictures/:id| obtiene la imagen de perfil con el :id|
 |  GET  | api/users| Obtiene todos los usuarios|
 |  GET  | api/users/:id| Obtener usuario por id|
-|  GET  | api/users/profile/:id| Obtener usuario por **id**|
+|  GET  | api/users/profile/:id| Obtener datos generales del usuario por **id** (nombre,score,id foto de perfil)|
 |  POST | api/users/register| Registra el usuario en la base de datos|
 |  POST | api/users/login| Verifica si el correo y contraseña son válidos|
 |  PUT  | api/users/:userId| Actualiza los datos del usuario po **id**|
