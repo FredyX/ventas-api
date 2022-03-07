@@ -9,7 +9,7 @@ module.exports = (sequelize, type) => {
             type: type.STRING(10),
             allowNull:false
         },pp_data:{
-            type: type.mediumBlob
+            type: type.BLOB("medium"),
         }
     },
     {
