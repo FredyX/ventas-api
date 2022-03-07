@@ -9,7 +9,7 @@ API VENTAS_HN
 |  POST | api/users/register| Registra el usuario en la base de datos|
 |  POST | api/users/login| Verifica si el correo y contraseña son válidos|
 |  PUT  | api/users/:userId| Actualiza los datos del usuario po **id**|
-| DELETE| api/users/:userId| Elimna usuario por **id**|
+| DELETE| api/users/:userId| Elimina usuario por **id**|
 
 __npm install__
 
