@@ -19,7 +19,8 @@ module.exports = (sequelize, type) => {
         },
         user_email : {
             type: type.STRING(50),
-            allowNull:false
+            allowNull:false,
+            unique: true
         },
         user_password : {
             type: type.STRING(300),
