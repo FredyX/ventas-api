@@ -81,7 +81,7 @@ router.post('/register', [
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errores: errors.array() });
+        return res.status(422).json({ error: errors.array() });
     }
     req.body.user_password = bcrypt.hashSync(req.body.user_password, 10);
     try {
@@ -95,18 +95,22 @@ router.post('/register', [
 });
 
 router.post('/login', async (req, res) => {
-    const user = await Users.findOne({ where: { user_email: req.body.user_email } });
-    if (user) {
-        const match = bcrypt.compareSync(req.body.user_password, user.user_password);
-        if (match) {
-            enviarEMail(generarEmail(req.body.user_email, generarContenidoLoggin(user.first_name), 'Nuevo inicio de sesion registrado'));
-            res.json({ success: createToken(user) });
-        } else {
+    try{
+        const user = await Users.findOne({ where: { user_email: req.body.user_email } });
+        if (user) {
+            const match = bcrypt.compareSync(req.body.user_password, user.user_password);
+            if (match) {
+                enviarEMail(generarEmail(req.body.user_email, generarContenidoLoggin(user.first_name), 'Nuevo inicio de sesion registrado'));
+                res.json({ success: createToken(user) });
+            } else {
+                res.json({ error: 'Error en usuario o contraseña' });
+            }
+        }else {
             res.json({ error: 'Error en usuario o contraseña' });
         }
-    } else {
-        res.json({ error: 'Error en usuario o contraseña' });
-    }
+    }catch(err){
+        res.json({error:'Parametros de solicitud invalidos'});
+    }    
 });
 
 router.put('/:userId', async (req, res) => {
@@ -129,7 +133,7 @@ const createToken = (user) => {
     const payload = {
         usuarioId: user.id,
         createdAt: moment().unix(),
-        expiredAt: moment().add(5, 'minutes').unix(),
+        expiredAt: moment().add(50, 'minutes').unix(),
     }
 
     return jwt.encode(payload, 'key word secret');
