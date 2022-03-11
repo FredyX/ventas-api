@@ -100,13 +100,12 @@ router.post('/login', async (req, res) => {
         if (user) {
             const match = bcrypt.compareSync(req.body.user_password, user.user_password);
             if (match) {
-                enviarEMail(generarEmail(req.body.user_email, generarContenidoLoggin(user.first_name), 'Nuevo inicio de sesion registrado'));
                 res.json({ success: createToken(user) });
             } else {
-                res.json({ error: 'Error en usuario o contraseña' });
+                res.json({ error: 'Error en contraseña' });
             }
         }else {
-            res.json({ error: 'Error en usuario o contraseña' });
+            res.json({ error: 'Error, usuario no registrado' });
         }
     }catch(err){
         res.json({error:'Parametros de solicitud invalidos'});

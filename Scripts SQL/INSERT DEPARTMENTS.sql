@@ -1,4 +1,25 @@
 use ventashn;
+
+delete from users where id = 1 ;
+
+delete from users where id =2;
+
+delete from users where id = 3 ;
+
+delete from users where id = 4;
+
+delete from users where id = 5 ;
+
+delete from users where id =6 ;
+
+delete from users where id = 7 ;
+
+delete from users where id = 8 ;
+
+delete from users where id = 9 ;
+
+delete from users where id = 12;
+
 INSERT INTO DEPARTMENTS (DEPARTMENT_NAME) VALUES ("Atlántida");
 INSERT INTO DEPARTMENTS (DEPARTMENT_NAME) VALUES ("Colón");
 INSERT INTO DEPARTMENTS (DEPARTMENT_NAME) VALUES ("Comayagua");
@@ -17,3 +38,4 @@ INSERT INTO DEPARTMENTS (DEPARTMENT_NAME) VALUES ("Olancho");
 INSERT INTO DEPARTMENTS (DEPARTMENT_NAME) VALUES ("Santa Bárbara");
 INSERT INTO DEPARTMENTS (DEPARTMENT_NAME) VALUES ("Valle");
 INSERT INTO DEPARTMENTS (DEPARTMENT_NAME) VALUES ("Yoro");
+
