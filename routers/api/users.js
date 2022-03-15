@@ -2,9 +2,10 @@ const router = require('express').Router();
 const { Users } = require('../../config/db.config');
 const bcrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator');
-const moment = require('moment');
-const jwt = require('jwt-simple');
-const { generarEmail, enviarEMail, generarContenidoRegistro , generarContenidoLoggin } = require('../../helpers/email');
+const { generarEmail, enviarEMail, generarContenidoRegistro } = require('../../helpers/email');
+const {doUserIdExist, doUserEmailExist} = require('../../helpers/dbValidators');
+const {validateFields,validateJwt,validateAdmin} = require('../../middlewares/');
+const {userGetId} = require('../../controllers/users');
 
 //OBTENER TODOS LOS USUARIOS
 router.get('/', async (req, res) => {
@@ -18,17 +19,25 @@ router.get('/', async (req, res) => {
 });
 
 //OBTENER USUARIO POR ID
-router.get('/:id', async (req, res) => {
-    try{
-        const user = await Users.findOne({
-            where: { id: req.params.id }
-        });
-        res.json(user);
-    }catch(err){
-        res.json({error:`Error usuario buscado por id no encontrado ${err}` });
-    }       
-}
-);
+router.get('/:id',[
+    validateJwt,
+    validateAdmin,
+    check('id').not().isEmpty().withMessage('El id es obligatorio'),
+    check('id').custom(doUserIdExist),
+    validateFields
+],userGetId);
+
+// router.get('/:id', async (req, res) => {
+//     try{
+//         const user = await Users.findOne({
+//             where: { id: req.params.id }
+//         });
+//         res.json(user);
+//     }catch(err){
+//         res.json({error:`Error usuario buscado por id no encontrado ${err}` });
+//     }       
+// }
+// );
 
 //OBTENER USUARIO POR ID CON LOS DATOS PARA EL PERFIL
 router.get('/profile/:id', async (req, res) => {
@@ -36,18 +45,6 @@ router.get('/profile/:id', async (req, res) => {
         const user = await Users.findOne({
             where: { id: req.params.id },
         });
-        /*
-        let products = await Products.findAll({
-            where: { user_id: user.id }
-        });
-        products = products.map(product => {
-            return {
-                id: product.id,
-                name: product.name,
-                description: product.description,
-                price: product.price
-            } 
-        } );*/
         const data = {
             first_name: user.first_name,
             last_name: user.last_name,
@@ -74,9 +71,11 @@ router.get('/:firt_name', async (req, res) => {
     }    
 }
 );
+
 //REGISTRA EL USUARIO EN LA BASE DE DATOS
 router.post('/register', [
     check('user_email', 'El correo es obligatorio').not().isEmpty(),
+    check('user_email').custom(doUserEmailExist),
     check('user_password', 'El password es incorrecto').not().isEmpty()
 ], async (req, res) => {
     const errors = validationResult(req);
@@ -94,23 +93,6 @@ router.post('/register', [
     }
 });
 
-router.post('/login', async (req, res) => {
-    try{
-        const user = await Users.findOne({ where: { user_email: req.body.user_email } });
-        if (user) {
-            const match = bcrypt.compareSync(req.body.user_password, user.user_password);
-            if (match) {
-                res.json({ success: createToken(user) });
-            } else {
-                res.json({ error: 'Error en contraseña' });
-            }
-        }else {
-            res.json({ error: 'Error, usuario no registrado' });
-        }
-    }catch(err){
-        res.json({error:'Parametros de solicitud invalidos'});
-    }    
-});
 
 router.put('/:userId', async (req, res) => {
     await Users.update(req.body, {
@@ -124,17 +106,7 @@ router.delete('/:userId', async (req, res) => {
     await Users.destroy({
         where: { id: req.params.userId }
     });
-
     res.json({ success: 'Eliminado usuario correctamente' });
 });
 
-const createToken = (user) => {
-    const payload = {
-        usuarioId: user.id,
-        createdAt: moment().unix(),
-        expiredAt: moment().add(50, 'minutes').unix(),
-    }
-
-    return jwt.encode(payload, 'key word secret');
-}
 module.exports = router;
