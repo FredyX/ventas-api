@@ -13,5 +13,4 @@ router.post('/login',[
     validateFields
 ],login );
 
-
 module.exports = router;

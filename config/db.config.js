@@ -22,6 +22,7 @@ const dbConfig = {
 
 const UsersModel = require('../models/users');
 const Profile_picturesModel = require('../models/profile_pictures');
+const ImagesModel = require('../models/images');
 
 const sequelize = new Sequelize(dbConfig.database,dbConfig.username,dbConfig.password,{
     host: dbConfig.host,
@@ -36,6 +37,7 @@ const sequelize = new Sequelize(dbConfig.database,dbConfig.username,dbConfig.pas
 
 const Users = UsersModel(sequelize, Sequelize);
 const Profile_pictures = Profile_picturesModel(sequelize, Sequelize);
+const Images = ImagesModel(sequelize, Sequelize);
 
 sequelize.sync({force: false})
     .then(()=> {
@@ -47,5 +49,5 @@ sequelize.sync({force: false})
 
 module.exports = {
     Users,
-    Profile_pictures
-}
+    Profile_pictures,
+    Images}
