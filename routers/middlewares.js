@@ -1,4 +1,4 @@
-const jwt = require('jwt-simple');
+/*const jwt = require('jwt-simple');
 const moment = require('moment');
 const checkToken = (req, res, next) => {
     if(!req.headers['user_token']){
@@ -20,4 +20,4 @@ const checkToken = (req, res, next) => {
 
 module.exports = {
     checkToken
-}
+}*/
