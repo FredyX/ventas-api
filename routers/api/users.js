@@ -85,6 +85,7 @@ router.post('/register', [
     req.body.user_password = bcrypt.hashSync(req.body.user_password, 10);
     try {
         const user = await Users.create(req.body);
+        console.log(user.id);
         enviarEMail(generarEmail(user.user_email, generarContenidoRegistro(user.first_name, user.last_name), 'Bienvenido a ventasHN'));
         res.json(user);
     } catch (error) {
