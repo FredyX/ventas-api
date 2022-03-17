@@ -1,4 +1,4 @@
-module.export = (sequelize, type) => {
+module.exports = (sequelize, type) => {
     return sequelize.define('images',{
         id: {
             type: type.INTEGER,
@@ -12,21 +12,19 @@ module.export = (sequelize, type) => {
         },
         image_name: {
             type: type.STRING(100),
-            allowNull: false,
+            allowNull: false
         },
         image_data: {
-            type: type.BLOB('medium'),
+            type: type.BLOB,
             allowNull: false
         },
         product_id: {
             type: type.INTEGER,
-            allowNulll: false,            
+            allowNulll: false            
         },
-        
-
-    },
+    
+},
     {
         timestamps: false
-    }
-    );
+    });
 }

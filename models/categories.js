@@ -1,5 +1,5 @@
 module.exports = (sequelize, type) => {
-    return sequelize.define('categorie_name',{
+    return sequelize.define('categories',{
         id:{
             type: type.INTEGER,
             primaryKey:true,

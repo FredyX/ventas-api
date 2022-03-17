@@ -20,8 +20,9 @@ const dbConfig = {
 
 const UsersModel = require('../models/users');
 const Profile_picturesModel = require('../models/profile_pictures');
-const ProductsModel = require('../models/products');
 const ImagesModel = require('../models/images');
+const ProductsModel = require('../models/products');
+const CategoriesModel = require('../models/categories');
 
 const sequelize = new Sequelize(dbConfig.database,dbConfig.username,dbConfig.password,{
     host: dbConfig.host,
@@ -38,7 +39,11 @@ const Users = UsersModel(sequelize, Sequelize);
 const Profile_pictures = Profile_picturesModel(sequelize, Sequelize);
 const Images = ImagesModel(sequelize, Sequelize);
 const Products = ProductsModel(sequelize, Sequelize);
+const Categories = CategoriesModel(sequelize,Sequelize);
 
+console.log('Lo que tenemos es', Images);
+console.log(typeof Images);
+console.log(Images);
 sequelize.sync({force: false})
     .then(()=> {
         console.log('Tablas sicronizadas');
@@ -50,6 +55,8 @@ sequelize.sync({force: false})
 module.exports = {
     Users,
     Profile_pictures,
+    Images,
     Products,
-    Images
+    sequelize,
+    Categories      
 }
