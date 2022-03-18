@@ -1,0 +1,1 @@
+Esto es para usarlo con una extencion de vscode llamada rest client

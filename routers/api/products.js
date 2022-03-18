@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { check } = require('express-validator');
-const { doUserIdExist, doProductIdExist, doCategorieIdExist , doDepartmentIdExist } = require('../../helpers/dbValidators');
-const { validateFields, validateJwt, validateAdmin , validateSameUser} = require('../../middlewares/');
+const { doUserIdExist, doProductIdExist, doCategoryIdExist , doDepartmentIdExist } = require('../../helpers/dbValidators');
+const { validateFields, validateJwt, validateAdmin /*, validateSameUser*/} = require('../../middlewares/');
 
 const { productsGetAll, productsGetId, productsGetCategorie, productsGetUser, productsPostAdd, productsPutUpdate, productsDelete } = require('../../controllers/products');
 
@@ -48,23 +48,22 @@ router.post('/', [
 ], productsPostAdd);
 
 //actualiza un producto
-router.put('/:id', [
-    validateJwt,
-    check('id').not().isEmpty().withMessage('El id es obligatorio'),
-    check('id').custom(doProductIdExist),
-    check('user_seller_id').custom(validateSameUser),
-    validateFields
-], productsPutUpdate);
+// router.put('/:id', [
+//     validateJwt,
+//     check('id').not().isEmpty().withMessage('El id es obligatorio'),
+//     check('id').custom(doProductIdExist),
+//     check('user_seller_id').custom(validateSameUser),
+//     validateFields
+// ], productsPutUpdate);
 
-
-//elimina un producto
-router.delete('/:id', [
-    validateJwt,
-    check('id').not().isEmpty().withMessage('El id es obligatorio'),
-    check('id').custom(doProductIdExist),
-    check('user_seller_id').custom(validateSameUser),
-    validateFields
-], productsDelete);
+// //elimina un producto
+// router.delete('/:id', [
+//     validateJwt,
+//     check('id').not().isEmpty().withMessage('El id es obligatorio'),
+//     check('id').custom(doProductIdExist),
+//     check('user_seller_id').custom(validateSameUser),
+//     validateFields
+// ], productsDelete);
 
 
 module.exports = router;
