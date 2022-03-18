@@ -8,7 +8,7 @@ const productsDelete = ()=>{}
 const { response, request } = require('express');
 
 const {Products, Images, Categories, Products_Categories, sequelize} = require('../config/db.config');
-
+const fs = require('fs');
 
 const productsPostAdd = async(req, res = response) => {
     const t = await sequelize.transaction();
@@ -53,6 +53,17 @@ const productsPostAdd = async(req, res = response) => {
             }
         }
 
+        if(Images){
+            const img = fs.readFileSync(req.file.path);
+		    const encode_image = img.toString('base64');
+		    const finalImg = {
+                image_data: new Buffer.from(encode_image),
+                image_type: req.file.mimetype,
+                image_name: req.file.filename,
+                product_id: product.id
+		    };
+		    await Images.create(finalImg,{transaction: t});
+        }
         await t.commit();
 
         res.json({

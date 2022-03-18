@@ -34,7 +34,7 @@ router.get('/user/:id', [
 
 //agrega un producto
 router.post('/', [
-    validateJwt,
+//    validateJwt,
     check('product_name').not().isEmpty().withMessage('El nombre del producto es obligatorio'),
     check('product_description').not().isEmpty().withMessage('La descripción del producto es obligatoria'),
     check('price').not().isEmpty().withMessage('El precio del producto es obligatorio'),
@@ -43,7 +43,7 @@ router.post('/', [
     check('department_id').custom(doDepartmentIdExist),
     check('state').not().isEmpty().withMessage('El estado del producto es obligatorio'),
     check('categories').not().isEmpty().withMessage('Las categorías del producto son obligatoria'),
-    check('images').not().isEmpty().withMessage('Las imagenes del producto son obligatorias'),
+    //check('image').not().isEmpty().withMessage('Las imagenes del producto son obligatorias'),
     validateFields
 ], productsPostAdd);
 
