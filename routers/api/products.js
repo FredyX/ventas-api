@@ -56,7 +56,6 @@ router.put('/:id', [
     validateFields
 ], productsPutUpdate);
 
-
 //elimina un producto
 router.delete('/:id', [
     validateJwt,
