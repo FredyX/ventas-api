@@ -2,6 +2,7 @@
 
 const {Images} = require('../config/db.config');
 const { sequelize } = require('../config/db.config');
+const fs = require('fs');
 const imagesPost = async(request, response) => {
     try{
        /* const images = await Images.create(request.body);
@@ -42,8 +43,25 @@ const getImagesProductId = async(request, response) =>{
     }
 }
 
+const uploadImage = async( request, response) => {
+    try {
+		const img = fs.readFileSync(request.file.path);
+		const encode_image = img.toString('base64');
+		const finalImg = {
+			image_data: new Buffer.from(encode_image),
+            image_type: request.file.mimetype,
+            image_name: request.file.filename,
+            product_id: 10
+		};
+		await Images.create(finalImg);
+		res.json({succes:'imagen cargada ala base datos'})
+	} catch(e) {		
+		console.log(`No se mando ${e}`);
+	}	
+}
 module.exports = {
     imagesGet,
     imagesPost,
-    getImagesProductId    
+    getImagesProductId,
+    uploadImage    
 }
