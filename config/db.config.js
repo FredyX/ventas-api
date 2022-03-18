@@ -24,6 +24,7 @@ const Profile_picturesModel = require('../models/profile_pictures');
 const ImagesModel = require('../models/images');
 const ProductsModel = require('../models/products');
 const CategoriesModel = require('../models/categories');
+const Products_CategoriesModel = require('../models/products_categories');
 
 const sequelize = new Sequelize(dbConfig.database,dbConfig.username,dbConfig.password,{
     host: dbConfig.host,
@@ -42,6 +43,7 @@ const Profile_pictures = Profile_picturesModel(sequelize, Sequelize);
 const Images = ImagesModel(sequelize, Sequelize);
 const Products = ProductsModel(sequelize, Sequelize);
 const Categories = CategoriesModel(sequelize,Sequelize);
+const Products_Categories = Products_CategoriesModel(sequelize,Sequelize);
 
 console.log('Lo que tenemos es', Images);
 console.log(typeof Images);
@@ -61,5 +63,6 @@ module.exports = {
     Products,
     sequelize,
     Categories ,
+    Products_Categories,
     Departments    
 }

@@ -1,0 +1,14 @@
+POST http://localhost:3001/api/products HTTP/1.1
+content-type: application/json
+x-token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsImlhdCI6MTY0NzU3ODMzNywiZXhwIjoxNjQ3NzUxMTM3fQ.XaVFG8C5X0vvqytg0p4LG5xnitNtkVlMTHOw_zfzlwE
+
+{   
+    "product_name": "test2",
+    "product_description": "test2 desc",
+    "price": 69.69,
+    "department_id": 1,
+    "state": "U",
+    "user_seller_id": 15,
+    "categories":[1,2,3,42],
+    "images":[1,2,3,4]
+}
