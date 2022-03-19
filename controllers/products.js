@@ -1,5 +1,5 @@
+const path = require('path');
 const productsGetAll = ()=>{}
-const productsGetId = ()=>{}
 const productsGetCategorie = ()=>{}
 const productsGetUser = ()=>{}
 const productsPutUpdate = ()=>{}
@@ -9,6 +9,8 @@ const { response, request } = require('express');
 
 const {Products, Images, Categories, Products_Categories, sequelize} = require('../config/db.config');
 const fs = require('fs');
+
+const productsGetId = ()=>{}
 
 const productsPostAdd = async(req, res = response) => {
     const t = await sequelize.transaction();
@@ -54,10 +56,10 @@ const productsPostAdd = async(req, res = response) => {
         }
 
         if(Images){
-            const img = fs.readFileSync(req.file.path);
-		    const encode_image = img.toString('base64');
+            const img = fs.readFileSync(
+                path.join(__dirname, '../public/images/'+req.file.filename));
 		    const finalImg = {
-                image_data: new Buffer.from(encode_image),
+                image_data: img,
                 image_type: req.file.mimetype,
                 image_name: req.file.filename,
                 product_id: product.id

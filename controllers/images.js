@@ -3,6 +3,7 @@
 const {Images} = require('../config/db.config');
 const { sequelize } = require('../config/db.config');
 const fs = require('fs');
+const { Console } = require('console');
 const imagesPost = async(request, response) => {
     try{
        /* const images = await Images.create(request.body);
@@ -33,22 +34,27 @@ const imagesGet = async(request, response) => {
         response.status(400).json({error});
     }
 }
-const getImagesProductId = async(request, response) =>{
-    try {
-        const {id} = request.params;
-        const [results, metadata] = await sequelize.query("SELECT * FROM users");        
-        response.json({results,metadata});
-    } catch (error) {
-        console.log('Falla general loco',error);
+const getImagesProductId = async (req, res) => {
+    const {image_data} = await Images.findOne({
+        where: { id: req.params.id }
+    });
+    if (image_data){               
+        //res.writeHead(200, { 'Content-Type': 'image/jpeg' });                
+        console.log(image_data);
+        res.json(image_data.toString('base64'));
+    }
+    else{
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Not found');
     }
 }
 
+
 const uploadImage = async( request, response) => {
     try {
-		const img = fs.readFileSync(request.file.path);
-		const encode_image = img.toString('base64');
+		const img = fs.readFileSync(request.file.path);        
 		const finalImg = {
-			image_data: new Buffer.from(encode_image),
+			image_data: img,
             image_type: request.file.mimetype,
             image_name: request.file.filename,
             product_id: 10

@@ -5,7 +5,7 @@ const router = Router();
 
 router.post('/upload',imagesPost);
 
-router.get('/:id',imagesGet);
+router.get('/:id',getImagesProductId);
 router.get('/product/:id',getImagesProductId);
 
 module.exports = router;
