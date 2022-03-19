@@ -3,21 +3,44 @@ const bodyParser = require('body-parser');
 const apiRouter = require('./routers/api');
 const multer = require('multer');
 const app = express();
+const cors = require('cors');
 
 require('./config/db.config');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(multer({
-	dest: 'public/images'
+    dest: 'public/images'
 }).single('image'));
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
 
-app.use('/api',apiRouter);
-app.listen( 3001, () => {
+const allowedOrigins = [
+    'http://localhost:8081'
+];
+// Reflect the origin if it's in the allowed list or not defined (cURL, Postman, etc.)
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (allowedOrigins.includes(origin) || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Origin not allowed by CORS'));
+        }
+    },
+};
+
+// Enable preflight requests for all routes
+app.options('*', cors(corsOptions));
+
+// app.use(function(req, res, next) {
+//     res.header("status", 200 );
+//     res.header("Access-Control-Allow-Origin", "*");
+//     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//     res.header("Access-Control-Allow-Credentials", "true");
+//     res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Authorization, Content-Length, X-Requested-With, Accept, Origin, Cache-Control, Pragma, Expires, x-token");
+//     next();
+// });
+
+app.use('/api', cors(corsOptions), apiRouter);
+
+app.listen(3001, () => {
     console.log('servidor arranco correctamente');
 });
