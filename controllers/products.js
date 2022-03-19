@@ -1,7 +1,9 @@
 const path = require('path');
-const productsGetAll = ()=>{}
-const productsGetCategorie = ()=>{}
 
+const productsGetCategorie = ()=>{}
+const productsGetAll = async(req, res)=>{
+    
+}
 const productsPutUpdate = ()=>{}
 const productsDelete = ()=>{}
 

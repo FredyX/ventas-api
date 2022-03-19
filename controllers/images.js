@@ -35,18 +35,27 @@ const imagesGet = async(request, response) => {
     }
 }
 const getImagesProductId = async (req, res) => {
-    const {image_data} = await Images.findOne({
-        where: { id: req.params.id }
-    });
-    if (image_data){               
+    try{
+        const images = await Images.findAll({
+            where: { product_id: req.params.id}
+        });
+        //res.writeHead(200, { 'Content-Type': 'image/jpeg' });
+        //res.end(images.image_data, 'binary');
+        res.json(images);
+        console.log(images);
+    }catch(err){
+        console.log('No se pudo obtener las imagenes');
+    }
+    
+    /*if (images){               
         //res.writeHead(200, { 'Content-Type': 'image/jpeg' });                
-        console.log(image_data);
-        res.json(image_data.toString('base64'));
+        console.log(images);
+     //   res.json(images);
     }
     else{
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('Not found');
-    }
+    }*/
 }
 
 
