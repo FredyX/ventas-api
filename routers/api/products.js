@@ -5,8 +5,6 @@ const { validateFields, validateJwt, validateAdmin /*, validateSameUser*/} = req
 
 const { productsGetAll, productsGetId, productsGetCategorie, productsGetUser, productsPostAdd, productsPutUpdate, productsDelete } = require('../../controllers/products');
 
-//obtiene todos los productos
-router.get('/:n', productsGetAll);
 
 //obtiene un producto por id
 router.get('/:id', [
@@ -15,13 +13,13 @@ router.get('/:id', [
 ], productsGetId);
 
 //obtiene n productos de una categoria
-router.get('/:&categories:department&:n', [
+router.get('/category/:categories&:department&:n', [
     check('categories').not().isEmpty().withMessage('Las categorias son obligatorias'),
     validateFields
 ], productsGetCategorie);
 
 //obtiene n productos segun un termino de busqueda
-router.get('/:search&:n', [
+router.get('/search/:search&:n', [
     check('search').not().isEmpty().withMessage('El campo de busqueda es obligatorio'),
     validateFields
 ], productsGetUser);

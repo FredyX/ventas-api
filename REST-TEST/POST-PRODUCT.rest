@@ -1,10 +1,10 @@
 POST http://localhost:3001/api/products HTTP/1.1
 content-type: application/json
-x-token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsImlhdCI6MTY0NzU3ODMzNywiZXhwIjoxNjQ3NzUxMTM3fQ.XaVFG8C5X0vvqytg0p4LG5xnitNtkVlMTHOw_zfzlwE
+x-token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsImlhdCI6MTY0NzYxMzk4NCwiZXhwIjoxNjQ3Nzg2Nzg0fQ.KsfrkaGZt_Yf33hcLl3kt1AqoBpnuL82vD9Wym08nAk
 
 {   
-    "product_name": "test2",
-    "product_description": "test2 desc",
+    "product_name": "test3",
+    "product_description": "test3 desc",
     "price": 69.69,
     "department_id": 1,
     "state": "U",
