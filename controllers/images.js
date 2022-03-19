@@ -34,17 +34,18 @@ const imagesGet = async(request, response) => {
         response.status(400).json({error});
     }
 }
-const getImagesProductId = async (req, res) => {
+const getImagestId = async (req, res) => {
     try{
         const images = await Images.findAll({
-            where: { product_id: req.params.id}
+            where: { id: req.params.id}
         });
-        //res.writeHead(200, { 'Content-Type': 'image/jpeg' });
-        //res.end(images.image_data, 'binary');
-        res.json(images);
-        console.log(images);
+        res.writeHead(200, { 'Content-Type': 'image/jpeg' });
+        res.end(images.image_data, 'binary');
+        //res.json(images);
+        //console.log(images);
     }catch(err){
         console.log('No se pudo obtener las imagenes');
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
     }
     
     /*if (images){               
@@ -76,7 +77,7 @@ const uploadImage = async( request, response) => {
 }
 module.exports = {
     imagesGet,
-    imagesPost,
-    getImagesProductId,
-    uploadImage    
+    imagesPost,    
+    uploadImage,
+    getImagestId
 }
