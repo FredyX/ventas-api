@@ -2,15 +2,18 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const apiRouter = require('./routers/api');
 const multer = require('multer');
+const path = require('path');
 const app = express();
 const cors = require('cors');
 
 require('./config/db.config');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(multer({
+app.use(express.static(path.join(__dirname, 'dbimages')));
+
+/*app.use(multer({
     dest: 'public/images'
-}).single('image'));
+}).single('image'));*/
 
 
 const allowedOrigins = [

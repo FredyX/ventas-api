@@ -1,9 +1,8 @@
 //const { response } = require('express');
-
-const {Images} = require('../config/db.config');
 const { sequelize } = require('../config/db.config');
+const {Images} = require('../config/db.config');
 const fs = require('fs');
-const { Console } = require('console');
+
 const imagesPost = async(request, response) => {
     try{
        /* const images = await Images.create(request.body);

@@ -1,4 +1,18 @@
+const multer = require('multer');
 const path = require('path');
+const { compararNombreImagenes } = require('../helpers/compararNombreImagenes');
+const fs = require('fs');
+
+const disktorage =  multer.diskStorage({
+    destination: path.join(__dirname, '../public/images'),
+    filename: (req, file, cb) => {
+        cb(null,Date.now()+'-'+file.originalname)
+    },    
+});
+
+const fileUpload = multer({
+    storage: disktorage
+}).single('image');
 
 const productsGetCategorie = ()=>{}
 const productsGetAll = async(req, res)=>{
@@ -10,7 +24,7 @@ const productsDelete = ()=>{}
 const { response, request } = require('express');
 
 const { Products, Images, Categories, Products_Categories, sequelize } = require('../config/db.config');
-const fs = require('fs');
+
 
 const obtenerCategorias = async (id) => {
     let categorias = await Products_Categories.findAll({
@@ -19,23 +33,29 @@ const obtenerCategorias = async (id) => {
         }
     });
     categorias = categorias.map(categorias => categorias.categorie_id);
-
     return categorias;
 }
 
-const obtenerImagenes = async (id) => {
-    let imagenes = await Images.findAll({
-        where: {
-            product_id: id
-        }
-    });
-
-    if (imagenes) {
-        imagenes = imagenes.map(imagenes => imagenes.id);
-    } else {
-        imagenes = [];
+const obtenerImagenes = async (req, res) => {    
+    try {
+        
+        let imagenes = await Images.findAll({
+          //  atributes:['image_data'],
+            where: {
+                product_id: req.params.id
+            }            
+        });
+        imagenes.map( (imagen) => {
+            fs.writeFileSync(path.join(__dirname,
+                '../public/dbimages/'+imagen.image_name), imagen.image_data);
+        });
+        const imagesdir = fs.readdirSync(
+            path.join(__dirname,'../public/dbimages/'));
+        console.log(compararNombreImagenes(imagesdir, imagenes));        
+        res.json(compararNombreImagenes(imagesdir, imagenes));
+    } catch (error) {
+        res.json({error: `No se encontraron imagenes del producto ${error}`});
     }
-    return imagenes;
 }
 
 const productsGetId = async (req, res = response) => {
@@ -182,5 +202,7 @@ module.exports = {
     productsGetUser,
     productsPostAdd,
     productsPutUpdate,
-    productsDelete
+    productsDelete,
+    fileUpload,
+    obtenerImagenes
 }

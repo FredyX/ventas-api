@@ -2,8 +2,16 @@ const router = require('express').Router();
 const { check } = require('express-validator');
 const { doUserIdExist, doProductIdExist, doCategoryIdExist , doDepartmentIdExist } = require('../../helpers/dbValidators');
 const { validateFields, validateJwt, validateAdmin /*, validateSameUser*/} = require('../../middlewares/');
-
-const { productsGetAll, productsGetId, productsGetCategorie, productsGetUser, productsPostAdd, productsPutUpdate, productsDelete } = require('../../controllers/products');
+const { 
+        fileUpload,
+        obtenerImagenes,
+        productsGetAll,
+        productsGetId,
+        productsGetCategorie,
+        productsGetUser,
+        productsPostAdd,
+        productsPutUpdate, 
+        productsDelete } = require('../../controllers/products');
 
 
 //obtiene un producto por id
@@ -31,7 +39,7 @@ router.get('/user/:id', [
 ], productsGetUser);
 
 //agrega un producto
-router.post('/', [
+router.post('/',fileUpload ,[
 //    validateJwt,
     check('product_name').not().isEmpty().withMessage('El nombre del producto es obligatorio'),
     check('product_description').not().isEmpty().withMessage('La descripción del producto es obligatoria'),
@@ -45,6 +53,7 @@ router.post('/', [
     validateFields
 ], productsPostAdd);
 
+router.get('/images/:id',obtenerImagenes);
 //actualiza un producto
 // router.put('/:id', [
 //     validateJwt,
@@ -62,6 +71,4 @@ router.post('/', [
 //     check('user_seller_id').custom(validateSameUser),
 //     validateFields
 // ], productsDelete);
-
-
 module.exports = router;
