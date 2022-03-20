@@ -70,12 +70,12 @@ const productsGetId = async (req, res = response) => {
             message: 'Producto no Encontrado'
         });
 
-        const imagenes = await obtenerImagenes(id);
+      //  const imagenes = await obtenerImagenes(id);
         const categorias = await obtenerCategorias(id);
 
         productoRespuesta = {
             product,
-            imagenes,
+        //    imagenes,
             categorias
         }
 
