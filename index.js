@@ -19,6 +19,8 @@ app.use(express.static(path.join(__dirname, './public/dbimages')));
 const allowedOrigins = [
     'http://localhost:8081'
 ];
+
+
 // Reflect the origin if it's in the allowed list or not defined (cURL, Postman, etc.)
 const corsOptions = {
     origin: (origin, callback) => {

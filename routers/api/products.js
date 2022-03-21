@@ -54,6 +54,8 @@ router.post('/',fileUpload ,[
 ], productsPostAdd);
 
 router.get('/images/:id',obtenerImagenes);
+
+
 //actualiza un producto
 // router.put('/:id', [
 //     validateJwt,

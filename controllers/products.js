@@ -50,8 +50,7 @@ const obtenerImagenes = async (req, res) => {
                 '../public/dbimages/'+imagen.image_name), imagen.image_data);
         });
         const imagesdir = fs.readdirSync(
-            path.join(__dirname,'../public/dbimages/'));
-        console.log(compararNombreImagenes(imagesdir, imagenes));        
+            path.join(__dirname,'../public/dbimages/'));    
         res.json(compararNombreImagenes(imagesdir, imagenes));
     } catch (error) {
         res.json({error: `No se encontraron imagenes del producto ${error}`});
