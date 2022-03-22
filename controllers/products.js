@@ -3,23 +3,24 @@ const path = require('path');
 const { compararNombreImagenes } = require('../helpers/compararNombreImagenes');
 const fs = require('fs');
 
-const disktorage =  multer.diskStorage({
+const disktorage = multer.diskStorage({
     destination: path.join(__dirname, '../public/images'),
     filename: (req, file, cb) => {
-        cb(null,Date.now()+'-'+file.originalname)
-    },    
+        cb(null, Date.now() + '-' + file.originalname)
+    },
 });
 
 const fileUpload = multer({
     storage: disktorage
+    , limits: { fieldSize: 25 * 1024 * 1024 }
 }).single('image');
 
-const productsGetCategorie = ()=>{}
-const productsGetAll = async(req, res)=>{
-    
+const productsGetCategorie = () => { }
+const productsGetAll = async (req, res) => {
+
 }
-const productsPutUpdate = ()=>{}
-const productsDelete = ()=>{}
+const productsPutUpdate = () => { }
+const productsDelete = () => { }
 
 const { response, request } = require('express');
 
@@ -36,24 +37,23 @@ const obtenerCategorias = async (id) => {
     return categorias;
 }
 
-const obtenerImagenes = async (req, res) => {    
+const obtenerImagenes = async (req, res) => {
     try {
-        
         let imagenes = await Images.findAll({
-          //  atributes:['image_data'],
+            //  atributes:['image_data'],
             where: {
                 product_id: req.params.id
-            }            
+            }
         });
-        imagenes.map( (imagen) => {
+        imagenes.map((imagen) => {
             fs.writeFileSync(path.join(__dirname,
-                '../public/dbimages/'+imagen.image_name), imagen.image_data);
+                '../public/dbimages/' + imagen.image_name), imagen.image_data);
         });
         const imagesdir = fs.readdirSync(
-            path.join(__dirname,'../public/dbimages/'));    
+            path.join(__dirname, '../public/dbimages/'));
         res.json(compararNombreImagenes(imagesdir, imagenes));
     } catch (error) {
-        res.json({error: `No se encontraron imagenes del producto ${error}`});
+        res.json({ error: `No se encontraron imagenes del producto ${error}` });
     }
 }
 
@@ -69,12 +69,12 @@ const productsGetId = async (req, res = response) => {
             message: 'Producto no Encontrado'
         });
 
-      //  const imagenes = await obtenerImagenes(id);
+        //  const imagenes = await obtenerImagenes(id);
         const categorias = await obtenerCategorias(id);
 
         productoRespuesta = {
             product,
-        //    imagenes,
+            //    imagenes,
             categorias
         }
 
@@ -135,6 +135,7 @@ const productsPostAdd = async (req, res = response) => {
             state,
             categories,
             user_seller_id,
+            image
         } = req.body;
 
 
@@ -166,10 +167,10 @@ const productsPostAdd = async (req, res = response) => {
             }
         }
 
-        if(Images){
+        if (image) {
             const img = fs.readFileSync(
-                path.join(__dirname, '../public/images/'+req.file.filename));
-		    const finalImg = {
+                path.join(__dirname, '../public/images/' + req.file.filename));
+            const finalImg = {
                 image_data: img,
                 image_type: req.file.mimetype,
                 image_name: req.file.filename,

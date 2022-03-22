@@ -3,7 +3,6 @@ const {emailConfig} = require("../config/email.config");
 
 const transporter = nodemailer.createTransport(emailConfig);
 
-//, content, agregados 
 const generarEmail = (emailDestino, contenido , asunto) => {
     let emailOptions = {
         from: "Remitente",
