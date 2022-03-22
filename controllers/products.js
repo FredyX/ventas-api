@@ -6,14 +6,14 @@ const fs = require('fs');
 const disktorage = multer.diskStorage({
     destination: path.join(__dirname, '../public/images'),
     filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname)
+        cb(null, req.body.user_seller_id + '-' + req.body.product_name+"."+req.body.ext );
     },
 });
 
 const fileUpload = multer({
     storage: disktorage
     , limits: { fieldSize: 25 * 1024 * 1024 }
-}).single('image');
+}).single('file');
 
 const productsGetCategorie = () => { }
 const productsGetAll = async (req, res) => {
@@ -135,9 +135,9 @@ const productsPostAdd = async (req, res = response) => {
             state,
             categories,
             user_seller_id,
-            image
+            date_added,
+            ext
         } = req.body;
-
 
         const newProduct = {
             product_name,
@@ -146,7 +146,7 @@ const productsPostAdd = async (req, res = response) => {
             department_id,
             state,
             user_seller_id,
-            date_added: new Date(),
+            date_added,
         }
 
         const product = await Products.create(newProduct, { transaction: t });
@@ -166,18 +166,19 @@ const productsPostAdd = async (req, res = response) => {
                 }
             }
         }
-
-        if (image) {
-            const img = fs.readFileSync(
-                path.join(__dirname, '../public/images/' + req.file.filename));
-            const finalImg = {
-                image_data: img,
-                image_type: req.file.mimetype,
-                image_name: req.file.filename,
-                product_id: product.id
-            };
-            await Images.create(finalImg, { transaction: t });
+        if (ext) {
+            image_type = 'image/'+ext;
         }
+        const img = fs.readFileSync(
+            path.join(__dirname, '../public/images/'+ user_seller_id+'-'+product_name+"."+ext));
+        const finalImg = {
+            image_data: img,
+            image_type: image_type,
+            image_name: +user_seller_id+'-'+product_name+"."+ext,
+            product_id: product.id
+        };
+        await Images.create(finalImg, { transaction: t });
+
         await t.commit();
 
         res.json({
@@ -191,7 +192,6 @@ const productsPostAdd = async (req, res = response) => {
             message: 'Hubo un error',
             error
         });
-
     }
 }
 
