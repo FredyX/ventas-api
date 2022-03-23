@@ -2,6 +2,7 @@ const multer = require('multer');
 const path = require('path');
 const { compararNombreImagenes } = require('../helpers/compararNombreImagenes');
 const fs = require('fs');
+const { QueryTypes } = require('sequelize');
 
 const disktorage = multer.diskStorage({
     destination: path.join(__dirname, '../public/images'),
@@ -24,7 +25,7 @@ const productsDelete = () => { }
 
 const { response, request } = require('express');
 
-const { Products, Images, Categories, Products_Categories, sequelize } = require('../config/db.config');
+const { Products, Images, Categories, Products_Categories, sequelize, Users, Departments } = require('../config/db.config');
 
 
 const obtenerCategorias = async (id) => {
@@ -40,7 +41,6 @@ const obtenerCategorias = async (id) => {
 const obtenerImagenes = async (req, res) => {
     try {
         let imagenes = await Images.findAll({
-            //  atributes:['image_data'],
             where: {
                 product_id: req.params.id
             }
@@ -54,6 +54,30 @@ const obtenerImagenes = async (req, res) => {
         res.json(compararNombreImagenes(imagesdir, imagenes));
     } catch (error) {
         res.json({ error: `No se encontraron imagenes del producto ${error}` });
+    }
+}
+
+const productsGetIdDetalle = async (req, res = response) => {
+    try {
+        const idProducto = req.params.id;
+        const producto = await sequelize.query(`SELECT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id where products.id= ${idProducto}`, { type: QueryTypes.SELECT });
+        const categorias = await sequelize.query(`
+        select categories.id,categorie_name from categories inner join products_categories on categories.id = products_categories.categorie_id inner join products on products.id = products_categories.product_id where products.id = ${idProducto}`, { type: QueryTypes.SELECT });
+        let imagenes = await Images.findAll({
+            where: {
+                product_id: idProducto
+            }
+        });
+        imagenes.map((imagen) => {
+            fs.writeFileSync(path.join(__dirname,
+                '../public/dbimages/' + imagen.image_name), imagen.image_data);
+        });
+        const imagesdir = fs.readdirSync(
+            path.join(__dirname, '../public/dbimages/'));
+        let imagenesRes = compararNombreImagenes(imagesdir, imagenes);
+        res.json({ producto, categorias, imagenesRes });
+    } catch (error) {
+        res.json({ error: `No se encontraron productos ${error}` });
     }
 }
 
@@ -204,5 +228,6 @@ module.exports = {
     productsPutUpdate,
     productsDelete,
     fileUpload,
-    obtenerImagenes
+    obtenerImagenes,
+    productsGetIdDetalle
 }

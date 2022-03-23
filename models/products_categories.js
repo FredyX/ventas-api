@@ -1,5 +1,11 @@
 module.exports = (sequelize, type) => {
     return sequelize.define('products_categories', {
+        id: {
+            type: type.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+            allowNull: false
+        },
         product_id: {
             type: type.INTEGER,
             allowNull: false,
