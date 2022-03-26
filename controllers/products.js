@@ -6,6 +6,7 @@ const fs = require('fs');
 const disktorage = multer.diskStorage({
     destination: path.join(__dirname, '../public/images'),
     filename: (req, file, cb) => {
+        console.log(file);
         cb(null, Date.now() + '-' + file.originalname)
     },
 });
