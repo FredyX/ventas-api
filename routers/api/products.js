@@ -11,7 +11,8 @@ const {
         productsGetUser,
         productsPostAdd,
         productsPutUpdate, 
-        productsDelete } = require('../../controllers/products');
+        productsDelete,
+        productsGetIdDetalle } = require('../../controllers/products');
 
 
 //obtiene un producto por id
@@ -19,6 +20,11 @@ router.get('/:id', [
     check('id').not().isEmpty().withMessage('El id es obligatorio'),
     check('id').custom(doProductIdExist)
 ], productsGetId);
+
+router.get('/detalle/:id', [
+    check('id').not().isEmpty().withMessage('El id es obligatorio'),
+    check('id').custom(doProductIdExist)
+], productsGetIdDetalle);
 
 //obtiene n productos de una categoria
 router.get('/category/:categories&:department&:n', [

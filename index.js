@@ -17,7 +17,8 @@ app.use(express.static(path.join(__dirname, './public/dbimages')));
 
 
 const allowedOrigins = [
-    'http://localhost:8081'
+    'http://localhost:8081',
+    'http://localhost:3000',
 ];
 
 
