@@ -5,7 +5,7 @@ const { check, validationResult } = require('express-validator');
 const { generarEmail, enviarEMail, generarContenidoRegistro } = require('../../helpers/email');
 const {doUserIdExist, doUserEmailExist} = require('../../helpers/dbValidators');
 const {validateFields,validateJwt,validateAdmin} = require('../../middlewares/');
-const {userGetId} = require('../../controllers/users');
+const {userGetId, newPassword,forgot_Password, reset_Password} = require('../../controllers/users');
 
 //OBTENER TODOS LOS USUARIOS
 router.get('/', async (req, res) => {
@@ -110,4 +110,9 @@ router.delete('/:userId', async (req, res) => {
     res.json({ success: 'Eliminado usuario correctamente' });
 });
 
+//router.post('/forgot_password',forgotPassword);
+//router.get('/new_password', newPassword);
+//otro intento
+router.put('/forgot_password',forgot_Password);
+router.put('reset_Password',reset_Password)
 module.exports = router;
