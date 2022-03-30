@@ -95,7 +95,7 @@ router.post('/register', [
 });
 
 
-router.put('/:userId', async (req, res) => {
+router.put('/update/:userId', async (req, res) => {
     await Users.update(req.body, {
         where: { id: req.params.userId }
     });
@@ -113,6 +113,10 @@ router.delete('/:userId', async (req, res) => {
 //router.post('/forgot_password',forgotPassword);
 //router.get('/new_password', newPassword);
 //otro intento
-router.put('/forgot_password',forgot_Password);
-router.put('reset_Password',reset_Password)
+router.put('/forgot_password/',forgot_Password);
+
+router.put('/reset_Password',[
+    validateJwt,
+    check('user_password').not().isEmpty().withMessage('El password es obligatorio')
+],reset_Password)
 module.exports = router;
