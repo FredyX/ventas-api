@@ -3,30 +3,114 @@ const path = require('path');
 const { compararNombreImagenes } = require('../helpers/compararNombreImagenes');
 const fs = require('fs');
 const { QueryTypes } = require('sequelize');
-
-const disktorage = multer.diskStorage({
-    destination: path.join(__dirname, '../public/images'),
-    filename: (req, file, cb) => {
-        cb(null, req.body.user_seller_id + '-' + req.body.product_name+"."+req.body.ext );
-    },
-});
-
-const fileUpload = multer({
-    storage: disktorage
-    , limits: { fieldSize: 25 * 1024 * 1024 }
-}).single('file');
-
-const productsGetCategorie = () => { }
-const productsGetAll = async (req, res) => {
-
-}
-const productsPutUpdate = () => { }
-const productsDelete = () => { }
-
 const { response, request } = require('express');
 
 const { Products, Images, Categories, Products_Categories, sequelize, Users, Departments } = require('../config/db.config');
 
+
+const disktorage = multer.diskStorage({ destination: path.join(__dirname, '../public/images'), filename: (req, file, cb) => { cb(null, req.body.user_seller_id + '-' + req.body.product_name + "." + req.body.ext); }, });
+
+const fileUpload = multer({ storage: disktorage, limits: { fieldSize: 25 * 1024 * 1024 } }).single('file');
+
+const productsGetCategorie = () => { }
+const productsGetAll = async (req, res) => { }
+
+const productsPutUpdate = async (req, res = response) => {
+    const t = await sequelize.transaction();
+    try {
+        const {
+            product_name,
+            product_description,
+            price,
+            department_id,
+            state,
+            categories,
+            user_seller_id,
+            ext
+        } = req.body;
+
+        const updatedProduct = {
+            product_name,
+            product_description,
+            price,
+            department_id,
+            state
+        }
+        const product = await Products.update(updatedProduct, {
+            where: {
+                id: req.params.id
+            }
+        }, { transaction: t });
+
+        if (categories) {
+            //eliminamos las categorias anteriores
+            await Products_Categories.destroy({
+                where: {
+                    product_id: req.params.id
+                }
+            }, { transaction: t });
+            //agregamos las nuevas categorias
+            for (let i = 0; i < categories.length; i++) {
+                const categorie = await Categories.findOne({
+                    where: {
+                        id: categories[i]
+                    }
+                });
+                if (categorie) {
+                    await Products_Categories.create({
+                        categorie_id: categories[i],
+                        product_id: product.id
+                    }, { transaction: t });
+                }
+            }
+        }
+        if (ext) {
+            image_type = 'image/' + ext;
+        }
+        const img = fs.readFileSync(
+            path.join(__dirname, '../public/images/' + user_seller_id + '-' + product_name + "." + ext));
+        const finalImg = {
+            image_data: img,
+            image_type: image_type,
+            image_name: user_seller_id + '-' + product_name + "." + ext,
+            product_id: product.id
+        };
+        await Images.update(finalImg, { transaction: t });
+        await t.commit();
+        res.json({
+            message: 'Producto agregado correctamente',
+            product
+        });
+    } catch (error) {
+        console.log(error);
+        await t.rollback();
+        res.status(500).json({
+            message: 'Hubo un error',
+            error
+        });
+    }
+}
+const productsDelete = async (req, res = response) => {
+    const t = await sequelize.transaction();
+    try {
+        await Products.destroy({
+            where: {
+                id: req.params.id
+            }
+        }, { transaction: t });
+        await t.commit();
+        res.json({
+            success: true,
+            message: 'Producto eliminado correctamente'
+        });
+    } catch (error) {
+        await t.rollback();
+        res.json({
+            success: false,
+            message: 'Error al eliminar el producto'
+        });
+    }
+}
 
 const obtenerCategorias = async (id) => {
     let categorias = await Products_Categories.findAll({
@@ -191,17 +275,22 @@ const productsPostAdd = async (req, res = response) => {
             }
         }
         if (ext) {
-            image_type = 'image/'+ext;
+            image_type = 'image/' + ext;
         }
         const img = fs.readFileSync(
-            path.join(__dirname, '../public/images/'+ user_seller_id+'-'+product_name+"."+ext));
+            path.join(__dirname, '../public/images/' + user_seller_id + '-' + product_name + "." + ext));
         const finalImg = {
             image_data: img,
             image_type: image_type,
-            image_name: +user_seller_id+'-'+product_name+"."+ext,
+            image_name: +user_seller_id + '-' + product_name + "." + ext,
             product_id: product.id
         };
         await Images.create(finalImg, { transaction: t });
+
+        fs.unlink(path.join(__dirname, '../public/images/' + user_seller_id + '-' + product_name + "." + ext), (err) => {
+            if (err) throw err;
+            console.log('successfully deleted');
+        });
 
         await t.commit();
 

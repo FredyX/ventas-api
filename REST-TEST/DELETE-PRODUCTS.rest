@@ -1,0 +1,3 @@
+DELETE http://localhost:3001/api/products/56 HTTP/1.1
+content-type: application/json
+x-token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsImlhdCI6MTY0ODI1MzkwMSwiZXhwIjoxNjQ4NDI2NzAxfQ.ww_tISqzB7YLwTNueTW4axAoLXQzwniPgNWQLNSDY2A
