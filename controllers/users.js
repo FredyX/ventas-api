@@ -15,7 +15,7 @@ const userGetId = async(req, res = response) => {
 const userGetProfileMod = async(req, res = response) => {
     const { id } = req.params;
     try{
-    const user = await Users.findOne({where: { id: id}});
+    const user = await Users.findByPk(id);
     const data = {
         first_name: user.first_name,
         last_name: user.last_name,
@@ -28,8 +28,10 @@ const userGetProfileMod = async(req, res = response) => {
     res.json(data);
 }catch(err){
     res.json({error:`Error al obtener los datos del perfil ${err}` });
-} 
+    }
+}
 
 module.exports = {
-    userGetId
+    userGetId,
+    userGetProfileMod
 }

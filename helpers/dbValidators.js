@@ -65,11 +65,12 @@ const validateSameUser = async( req, res = response, next ) => {
     }
     const {id} = req.user
     const userId = req.params.id;
-    if ( id !== userId ) {
+    if ( id != userId ) {
         return res.status(401).json({
             msg: `El usuario con id ${ id } no tiene permitido ver esta informacion`
         });
     }
+    next();
 }
 
 
