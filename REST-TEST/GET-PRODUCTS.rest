@@ -1,2 +1,2 @@
-GET http://localhost:3001/api/products/5
+GET http://localhost:3001/api/products/user/28/1
 

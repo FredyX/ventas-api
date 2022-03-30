@@ -200,27 +200,28 @@ const productsGetId = async (req, res = response) => {
 
 const productsGetUser = async (req, res = response) => {
     try {
-        const { id } = req.params;
-        const products = await Products.findAll({
-            where: {
-                user_seller_id: id
-            }
-        });
+        const { id, page } = req.params;
+        const start = (page - 1) * 9;
+        const products = await sequelize.query(`SELECT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score, image_name, image_data FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id join images on images.product_id=products.id where products.user_seller_id= ${id} order by date_added asc limit ${start}, 9`, { type: QueryTypes.SELECT });
         if (!products) return res.status(404).json({
-            message: 'Producto no Encontrado'
+            message: 'El suario no tiene productos'
         });
+        data=[];
+        products.map(
+            (product) => {
+                const {id, product_name, product_description, price, state, is_selling, date_added, department_name, first_name, last_name, score, image_name, image_data} = product;
 
-        for (let i = 0; i < products.length; i++) {
-            let categories = await obtenerCategorias(products[i].id);
-            let images = await obtenerImagenes(products[i].id);
-            products[i] = {
-                ...products[i].dataValues,
-                images,
-                categories
+                fs.writeFileSync(path.join(__dirname,
+                    '../public/dbimages/' + image_name), image_data);
+
+                const p= {
+                    id, product_name, product_description, price, state, is_selling, date_added, department_name, first_name, last_name, score, image_name
+                }
+                data.push(p);
             }
-        }
+        )
         res.json({
-            products
+            data
         });
     } catch (error) {
         console.log(error);

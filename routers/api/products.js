@@ -40,9 +40,11 @@ router.get('/search/:search&:n', [
 ], productsGetUser);
 
 //obtiene los productos de un usuario
-router.get('/user/:id', [
+router.get('/user/:id/:page', [
     check('id').not().isEmpty().withMessage('El id es obligatorio'),
-    check('id').custom(doUserIdExist)
+    check('id').custom(doUserIdExist),
+    check('page').not().isEmpty().withMessage('El numero de pagina es obligatorio'),
+    validateFields
 ], productsGetUser);
 
 //agrega un producto
