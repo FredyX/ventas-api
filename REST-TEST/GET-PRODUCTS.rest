@@ -1,2 +1,2 @@
-GET http://localhost:3001/api/products/user/28/1
+GET http://localhost:3001/api/products/search/?search=nuevo&categories=6&departments=8&score=5&page=1
 

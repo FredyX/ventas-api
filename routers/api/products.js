@@ -12,7 +12,7 @@ const {
     productsPostAdd,
     productsPutUpdate,
     productsDelete,
-    productsGetIdDetalle } = require('../../controllers/products');
+    productsGetIdDetalle} = require('../../controllers/products');
 
 
 //obtiene un producto por id
@@ -32,12 +32,6 @@ router.get('/category/:categories&:department&:n', [
     check('categories').not().isEmpty().withMessage('Las categorias son obligatorias'),
     validateFields
 ], productsGetCategorie);
-
-//obtiene n productos segun un termino de busqueda
-router.get('/search/:search&:n', [
-    check('search').not().isEmpty().withMessage('El campo de busqueda es obligatorio'),
-    validateFields
-], productsGetUser);
 
 //obtiene los productos de un usuario
 router.get('/user/:id/:page', [

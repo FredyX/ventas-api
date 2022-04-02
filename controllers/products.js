@@ -7,7 +7,6 @@ const { response, request } = require('express');
 
 const { Products, Images, Categories, Products_Categories, sequelize, Users, Departments } = require('../config/db.config');
 
-
 const disktorage = multer.diskStorage({ destination: path.join(__dirname, '../public/images'), filename: (req, file, cb) => { cb(null, req.body.user_seller_id + '-' + req.body.product_name + "." + req.body.ext); }, });
 
 const fileUpload = multer({ storage: disktorage, limits: { fieldSize: 25 * 1024 * 1024 } }).single('file');
@@ -206,15 +205,15 @@ const productsGetUser = async (req, res = response) => {
         if (!products) return res.status(404).json({
             message: 'El suario no tiene productos'
         });
-        data=[];
+        data = [];
         products.map(
             (product) => {
-                const {id, product_name, product_description, price, state, is_selling, date_added, department_name, first_name, last_name, score, image_name, image_data} = product;
+                const { id, product_name, product_description, price, state, is_selling, date_added, department_name, first_name, last_name, score, image_name, image_data } = product;
 
                 fs.writeFileSync(path.join(__dirname,
                     '../public/dbimages/' + image_name), image_data);
 
-                const p= {
+                const p = {
                     id, product_name, product_description, price, state, is_selling, date_added, department_name, first_name, last_name, score, image_name
                 }
                 data.push(p);
@@ -309,6 +308,63 @@ const productsPostAdd = async (req, res = response) => {
     }
 }
 
+const productsSearch = async (req, res = response) => {
+    try {
+        const { search, categories, departments, score, page } = req.params;
+        const start = (page - 1) * 9;
+        let cat = '';
+        let dep = '';
+
+        if (!categories) {
+            cat = 'null';
+        }
+        else {
+            cat = categories;
+        }
+
+        if (!departments) {
+            dep = 'null';
+        }else
+        {
+            dep = departments;
+        }
+
+        if (!score) {
+            score = 'null';
+        }
+
+        const products = await sequelize.query(`SELECT DISTINCT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score, image_name,image_data FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id join images on images.product_id=products.id join products_categories on products.id = products_categories.product_id WHERE MATCH(product_name,product_description) AGAINST('${search}') OR categorie_id in (${cat}) OR products.department_id in (${dep}) or score > ${score} ORDER BY MATCH(product_name,product_description) AGAINST('${search}') DESC limit ${start}, 9`, { type: QueryTypes.SELECT });
+
+        if (!products) return res.status(404).json({
+            message: 'No se encontraron productos'
+        });
+        
+        data = [];
+        products.map(
+            (product) => {
+                const { id, product_name, product_description, price, state, is_selling, date_added, department_name, first_name, last_name, score, image_name, image_data } = product;
+
+                fs.writeFileSync(path.join(__dirname,
+                    '../public/dbimages/' + image_name), image_data);
+
+                const p = {
+                    id, product_name, product_description, price, state, is_selling, date_added, department_name, first_name, last_name, score, image_name
+                }
+                data.push(p);
+            }
+        )
+        res.json({
+            data
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Hubo un error',
+            error
+        });
+    }
+}
+
 module.exports = {
     productsGetAll,
     productsGetId,
@@ -319,5 +375,6 @@ module.exports = {
     productsDelete,
     fileUpload,
     obtenerImagenes,
-    productsGetIdDetalle
+    productsGetIdDetalle,
+    productsSearch
 }
