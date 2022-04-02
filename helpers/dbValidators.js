@@ -34,6 +34,44 @@ const doProductIdExist = async( product_id ) => {
     }
 }
 
+const sameUserProduct = async( req, res = response, next ) => {
+    if (!req.user) {
+        return res.status(401).json({
+            ok: false,
+            message: 'No estás autorizado para realizar esta acción'
+            });
+    }
+    
+    const {id} = req.user
+    const productId = req.params.id;
+
+    const product = await Products.findOne({ 
+        where: { id: productId,
+        user_seller_id: id }});
+    if ( !product ) {
+        return res.status(401).json({
+            msg: `El usuario con id ${ id } no tiene el producto con id ${ productId }`
+        });
+    }
+    next();
+}
+
+const validateSameUser = async( req, res = response, next ) => {
+    if (!req.user) {
+        return res.status(401).json({
+            ok: false,
+            message: 'No estás autorizado para realizar esta acción'
+            });
+    }
+    const {id} = req.user
+    const userId = req.params.id;
+    if ( id != userId ) {
+        return res.status(401).json({
+            msg: `El usuario con id ${ id } no tiene permitido ver esta informacion`
+        });
+    }
+    next();
+}
 
 
 module.exports = {
@@ -41,5 +79,7 @@ module.exports = {
     doUserIdExist,
     doDepartmentIdExist,
     doCategoryIdExist,
-    doProductIdExist
+    doProductIdExist,
+    sameUserProduct,
+    validateSameUser
 }

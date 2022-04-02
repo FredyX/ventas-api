@@ -1,0 +1,3 @@
+GET http://localhost:3001/api/users/personal/15 HTTP/1.1
+content-type: application/json
+x-token : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsImlhdCI6MTY0ODYwNTI4OSwiZXhwIjoxNjQ4Nzc4MDg5fQ.8Ez8dxcsPJryRIaBwWtgAFeQ4Trx-r5cjQKD73YC64I

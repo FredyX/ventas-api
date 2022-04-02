@@ -3,9 +3,9 @@ const { Users } = require('../../config/db.config');
 const bcrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator');
 const { generarEmail, enviarEMail, generarContenidoRegistro } = require('../../helpers/email');
-const {doUserIdExist, doUserEmailExist} = require('../../helpers/dbValidators');
+const {doUserIdExist, doUserEmailExist,validateSameUser} = require('../../helpers/dbValidators');
 const {validateFields,validateJwt,validateAdmin} = require('../../middlewares/');
-const {userGetId} = require('../../controllers/users');
+const {userGetId, userGetProfileMod} = require('../../controllers/users');
 
 //OBTENER TODOS LOS USUARIOS
 router.get('/', async (req, res) => {
@@ -15,7 +15,6 @@ router.get('/', async (req, res) => {
     }catch(err){
         res.json({error:`Error al intertar obtener los usuarios ${err}` });
     }
-    
 });
 
 //OBTENER USUARIO POR ID
@@ -27,17 +26,15 @@ router.get('/:id',[
     validateFields
 ],userGetId);
 
-// router.get('/:id', async (req, res) => {
-//     try{
-//         const user = await Users.findOne({
-//             where: { id: req.params.id }
-//         });
-//         res.json(user);
-//     }catch(err){
-//         res.json({error:`Error usuario buscado por id no encontrado ${err}` });
-//     }       
-// }
-// );
+//OBTENER USUARIO Para modificar su perfil 
+router.get('/personal/:id',[
+    validateJwt,
+    check('id').not().isEmpty().withMessage('El id es obligatorio'),
+    check('id').custom(doUserIdExist),
+    validateSameUser,
+    validateFields
+],userGetProfileMod);
+
 
 //OBTENER USUARIO POR ID CON LOS DATOS PARA EL PERFIL
 router.get('/profile/:id', async (req, res) => {
