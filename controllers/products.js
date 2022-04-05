@@ -6,8 +6,9 @@ const { QueryTypes } = require('sequelize');
 const { response, request } = require('express');
 
 const { Products, Images, Categories, Products_Categories, sequelize, Users, Departments } = require('../config/db.config');
+const moment = require('moment');
 
-const disktorage = multer.diskStorage({ destination: path.join(__dirname, '../public/images'), filename: (req, file, cb) => { cb(null, req.body.user_seller_id + '-' + req.body.product_name + "." + req.body.ext); }, });
+const disktorage = multer.diskStorage({ destination: path.join(__dirname, '../public/images'), filename: (req, file, cb) => { cb(null, parseInt(Date.parse(req.body.date_added)/10000,10)+"-"+ req.body.user_seller_id + '-' + req.body.product_name + "." + req.body.ext); }, });
 
 const fileUpload = multer({ storage: disktorage, limits: { fieldSize: 25 * 1024 * 1024 } }).single('file');
 
@@ -246,6 +247,8 @@ const productsPostAdd = async (req, res = response) => {
             date_added,
             ext
         } = req.body;
+        
+        let datefinal= new moment(Date.parse(date_added));
 
         const newProduct = {
             product_name,
@@ -254,7 +257,7 @@ const productsPostAdd = async (req, res = response) => {
             department_id,
             state,
             user_seller_id,
-            date_added,
+            date_added: datefinal
         }
 
         const product = await Products.create(newProduct, { transaction: t });
@@ -278,16 +281,16 @@ const productsPostAdd = async (req, res = response) => {
             image_type = 'image/' + ext;
         }
         const img = fs.readFileSync(
-            path.join(__dirname, '../public/images/' + user_seller_id + '-' + product_name + "." + ext));
+            path.join(__dirname, '../public/images/' +parseInt(Date.parse(date_added)/10000,10)+"-"+ user_seller_id + '-' + product_name + "." + ext));
         const finalImg = {
             image_data: img,
             image_type: image_type,
-            image_name: +user_seller_id + '-' + product_name + "." + ext,
+            image_name: parseInt(Date.parse(date_added)/10000,10)+"-"+user_seller_id + '-' + product_name + "." + ext,
             product_id: product.id
         };
         await Images.create(finalImg, { transaction: t });
 
-        fs.unlink(path.join(__dirname, '../public/images/' + user_seller_id + '-' + product_name + "." + ext), (err) => {
+        fs.unlink(path.join(__dirname, '../public/images/'+parseInt(Date.parse(date_added)/10000,10)+"-" + user_seller_id + '-' + product_name + "." + ext), (err) => {
             if (err) throw err;
             console.log('successfully deleted');
         });
