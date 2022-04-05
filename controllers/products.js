@@ -338,6 +338,8 @@ const productsSearch = async (req, res = response) => {
 
         if (score == 'null') {
             scr = 0;
+        }else{
+            scr = score;
         }
 
         if (search == 'null' && categories == 'null' && departments == 'null' && score == 'null') {
