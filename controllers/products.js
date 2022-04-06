@@ -353,15 +353,15 @@ const productsSearch = async (req, res = response) => {
         const products = await sequelize.query(`SELECT DISTINCT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score, image_name,image_data FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id join images on images.product_id=products.id join products_categories on products.id = products_categories.product_id WHERE ((MATCH(product_name,product_description) AGAINST(${srch}) OR categorie_id in (${cat}) OR products.department_id in (${dep})) and score >= ${scr}) ORDER BY MATCH(product_name,product_description) AGAINST(${srch}) DESC limit ${start}, 9`, { type: QueryTypes.SELECT });
 
 
-        let quantity = await sequelize.query(`SELECT COUNT( DISTINCT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score, image_name,image_data ) FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id join images on images.product_id=products.id join products_categories on products.id = products_categories.product_id WHERE ((MATCH(product_name,product_description) AGAINST(${srch}) OR categorie_id in (${cat}) OR products.department_id in (${dep})) and score >= ${scr}) ORDER BY MATCH(product_name,product_description) AGAINST(${srch}) DESC`, { type: QueryTypes.SELECT });
+        let quantity = await sequelize.query(`SELECT COUNT( DISTINCT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score) FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id join products_categories on products.id = products_categories.product_id WHERE ((MATCH(product_name,product_description) AGAINST(${srch}) OR categorie_id in (${cat}) OR products.department_id in (${dep})) and score >= ${scr}) ORDER BY MATCH(product_name,product_description) AGAINST(${srch}) DESC`, { type: QueryTypes.SELECT });
 
-        quantity = quantity[0]["COUNT( DISTINCT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score, image_name,image_data)"];
+        quantity = quantity[0]["COUNT( DISTINCT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score)"];
 
         if (!products) return res.status(404).json({
             message: 'No se encontraron productos'
         });
 
-        data = [];
+        let data = [];
         products.map(
             (product) => {
                 const { id, product_name, product_description, price, state, is_selling, date_added, department_name, first_name, last_name, score, image_name, image_data } = product;
@@ -377,7 +377,7 @@ const productsSearch = async (req, res = response) => {
         )
         res.json({
             data,
-            quantity
+            totalPages : Math.ceil(quantity / 9)
         });
         
     } catch (error) {
