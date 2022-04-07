@@ -3,7 +3,6 @@ API VENTAS_HN
 
 |Métodos| Urls  | Acciones|
 |:-----:|-------| --------|
-|  GET  | api/profile_pictures/:id| obtiene la imagen de perfil con el :id|
 |  GET  | api/users| Obtiene todos los usuarios|
 |  GET  | api/users/:id| Obtener usuario por id|
 |  GET  | api/users/profile/:id| Obtener datos generales del usuario por **id** (nombre,score,id foto de perfil)|

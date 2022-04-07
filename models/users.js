@@ -13,10 +13,6 @@ module.exports = (sequelize, type) => {
             type: type.STRING(20),
             allowNull:false
         },
-        profile_picture_id : {
-            type: type.INTEGER,
-            defaultValue: 2            
-        },
         user_email : {
             type: type.STRING(50),
             allowNull:false,

@@ -64,7 +64,6 @@ const userGetProfileMod = async(req, res = response) => {
         first_name: user.first_name,
         last_name: user.last_name,
         score: user.score,
-        profile_picture_id: user.profile_picture_id,
         user_email : user.user_email,
         department_id : user.department_id,
         is_company : user.is_company,

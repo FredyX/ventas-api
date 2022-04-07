@@ -47,7 +47,6 @@ router.get('/profile/:id', async (req, res) => {
             first_name: user.first_name,
             last_name: user.last_name,
             score: user.score,
-            profile_picture_id: user.profile_picture_id,
             //products
         };
         res.json(data);
