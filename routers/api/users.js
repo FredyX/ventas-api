@@ -93,11 +93,15 @@ router.post('/register', [
 
 
 router.put('/update/:userId', async (req, res) => {
-    await Users.update(req.body, {
-        where: { id: req.params.userId }
-    });
-
-    res.json({ success: 'Modificado correctamente' });
+    try {
+        await Users.update(req.body, {
+            where: { id: req.params.userId }
+        });
+    
+        res.json({ success: 'Modificado correctamente' });
+    } catch (error) {
+        res.json({ error: `No se logro modificar ${error}` });
+    }
 });
 
 router.delete('/:userId', async (req, res) => {

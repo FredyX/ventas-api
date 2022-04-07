@@ -12,8 +12,6 @@ const disktorage = multer.diskStorage({ destination: path.join(__dirname, '../pu
 
 const fileUpload = multer({ storage: disktorage, limits: { fieldSize: 25 * 1024 * 1024 } }).single('file');
 
-const productsGetCategorie = () => { }
-const productsGetAll = async (req, res) => { }
 
 const productsPutUpdate = async (req, res = response) => {
     const t = await sequelize.transaction();
@@ -200,9 +198,8 @@ const productsGetId = async (req, res = response) => {
 
 const productsGetUser = async (req, res = response) => {
     try {
-        const { id, page } = req.params;
-        const start = (page - 1) * 9;
-        const products = await sequelize.query(`SELECT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score, image_name, image_data FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id join images on images.product_id=products.id where products.user_seller_id= ${id} order by date_added asc limit ${start}, 9`, { type: QueryTypes.SELECT });
+        const { id } = req.params;
+        const products = await sequelize.query(`SELECT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score, image_name, image_data FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id join images on images.product_id=products.id where products.user_seller_id= ${id} order by date_added asc `, { type: QueryTypes.SELECT });
         if (!products) return res.status(404).json({
             message: 'El suario no tiene productos'
         });
@@ -313,8 +310,7 @@ const productsPostAdd = async (req, res = response) => {
 
 const productsSearch = async (req, res = response) => {
     try {
-        const { search, categories, departments, score, page } = req.params;
-        const start = (page - 1) * 9;
+        const { search, categories, departments, score } = req.params;
         let cat = '';
         let dep = '';
         let srch = "'"+ " "+  "'";
@@ -327,14 +323,14 @@ const productsSearch = async (req, res = response) => {
         }
         
         if (categories == 'null') {
-            cat = 'null';
+            cat = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18';
         }
         else {
             cat = categories;
         }
 
         if (departments == 'null') {
-            dep = 'null';
+            dep = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18';
         } else {
             dep = departments;
         }
@@ -350,18 +346,16 @@ const productsSearch = async (req, res = response) => {
             scr = 5;
         }
 
-        const products = await sequelize.query(`SELECT DISTINCT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score, image_name,image_data FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id join images on images.product_id=products.id join products_categories on products.id = products_categories.product_id WHERE ((MATCH(product_name,product_description) AGAINST(${srch}) OR categorie_id in (${cat}) OR products.department_id in (${dep})) and score >= ${scr}) ORDER BY MATCH(product_name,product_description) AGAINST(${srch}) DESC limit ${start}, 9`, { type: QueryTypes.SELECT });
-
-
-        let quantity = await sequelize.query(`SELECT COUNT( DISTINCT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score) FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id join products_categories on products.id = products_categories.product_id WHERE ((MATCH(product_name,product_description) AGAINST(${srch}) OR categorie_id in (${cat}) OR products.department_id in (${dep})) and score >= ${scr}) ORDER BY MATCH(product_name,product_description) AGAINST(${srch}) DESC`, { type: QueryTypes.SELECT });
-
-        quantity = quantity[0]["COUNT( DISTINCT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score)"];
-
+        const products = await sequelize.query(`SELECT DISTINCT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score, image_name,image_data FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id join images on images.product_id=products.id join products_categories on products.id = products_categories.product_id WHERE ((MATCH(product_name,product_description) AGAINST(${srch}) AND categorie_id in (${cat}) AND products.department_id in (${dep})) AND score >= ${scr}) ORDER BY MATCH(product_name,product_description) AGAINST(${srch}) DESC`, { type: QueryTypes.SELECT });
+        
         if (!products) return res.status(404).json({
             message: 'No se encontraron productos'
         });
-
+        
+        let quantity = products.length;
+        
         let data = [];
+
         products.map(
             (product) => {
                 const { id, product_name, product_description, price, state, is_selling, date_added, department_name, first_name, last_name, score, image_name, image_data } = product;
@@ -391,9 +385,7 @@ const productsSearch = async (req, res = response) => {
 
 
 module.exports = {
-    productsGetAll,
     productsGetId,
-    productsGetCategorie,
     productsGetUser,
     productsPostAdd,
     productsPutUpdate,

@@ -1,13 +1,11 @@
 const router = require('express').Router();
 const { check } = require('express-validator');
-const { doUserIdExist, doProductIdExist, doCategoryIdExist, doDepartmentIdExist, sameUserProduct } = require('../../helpers/dbValidators');
-const { validateFields, validateJwt, validateAdmin } = require('../../middlewares/');
+const { doUserIdExist, doProductIdExist , doDepartmentIdExist, sameUserProduct } = require('../../helpers/dbValidators');
+const { validateFields, validateJwt } = require('../../middlewares/');
 const {
     fileUpload,
     obtenerImagenes,
-    productsGetAll,
     productsGetId,
-    productsGetCategorie,
     productsGetUser,
     productsPostAdd,
     productsPutUpdate,
@@ -27,17 +25,11 @@ router.get('/detalle/:id', [
     check('id').custom(doProductIdExist)
 ], productsGetIdDetalle);
 
-//obtiene n productos de una categoria
-router.get('/category/:categories&:department&:n', [
-    check('categories').not().isEmpty().withMessage('Las categorias son obligatorias'),
-    validateFields
-], productsGetCategorie);
 
 //obtiene los productos de un usuario
-router.get('/user/:id/:page', [
+router.get('/user/:id', [
     check('id').not().isEmpty().withMessage('El id es obligatorio'),
     check('id').custom(doUserIdExist),
-    check('page').not().isEmpty().withMessage('El numero de pagina es obligatorio'),
     validateFields
 ], productsGetUser);
 

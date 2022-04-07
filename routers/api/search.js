@@ -11,7 +11,7 @@ const {productsSearch} = require('../../controllers/products');
 
 //localhost:3001/api/search/nuevo producto&1,2,3&1,7&5&1
 
-router.get('/:search&:categories&:departments&:score&:page', [
+router.get('/:search&:categories&:departments&:score', [
     check('search').not().isEmpty().withMessage('El campo de busqueda es obligatorio'),
     validateFields
 ], productsSearch);
