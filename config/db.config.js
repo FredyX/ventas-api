@@ -24,7 +24,8 @@ const ImagesModel = require('../models/images');
 const ProductsModel = require('../models/products');
 const CategoriesModel = require('../models/categories');
 const Products_CategoriesModel = require('../models/products_categories');
-
+const SuscriptionsModel = require('../models/subcriptions');
+const Suscriptions_categoriesModel = require('../models/suscriptions_categories');
 const sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, {
     host: dbConfig.host,
     dialect: dbConfig.dialect,
@@ -42,10 +43,8 @@ const Images = ImagesModel(sequelize, Sequelize);
 const Products = ProductsModel(sequelize, Sequelize);
 const Categories = CategoriesModel(sequelize, Sequelize);
 const Products_Categories = Products_CategoriesModel(sequelize, Sequelize);
-
-console.log('Lo que tenemos es', Images);
-console.log(typeof Images);
-console.log(Images);
+const Suscriptions = SuscriptionsModel(sequelize,Sequelize);
+const Suscriptions_categories = Suscriptions_categoriesModel(sequelize, Sequelize);
 sequelize.sync({ force: false })
     .then(() => {
         console.log('Tablas sicronizadas');
@@ -61,5 +60,7 @@ module.exports = {
     sequelize,
     Categories,
     Products_Categories,
-    Departments
+    Departments,
+    Suscriptions,
+    Suscriptions_categories
 }

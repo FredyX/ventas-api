@@ -6,7 +6,8 @@ const apiImagesRouter = require('./api/images');
 const apiCategoriesRouter = require('./api/categories');
 const apiDepartmentsRouter = require('./api/departments');
 const apiSearchRouter = require('./api/search');
-
+const apiSuscription = require('./api/suscriptions');
+const apiSuscriptionC = require('./api/subcripcategories');
 
 router.use('/users', apiUsersRouter);
 router.use('/auth', apiAuthRouter);
@@ -15,5 +16,6 @@ router.use('/images',apiImagesRouter);
 router.use('/categories', apiCategoriesRouter);
 router.use('/departments', apiDepartmentsRouter);
 router.use('/search', apiSearchRouter);
-
+router.use('/suscriptions', apiSuscription);
+router.use('/suscription',apiSuscriptionC);
 module.exports = router;
