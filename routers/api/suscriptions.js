@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const {agregarSuscripcion} = require('../../controllers/subcriptions');
+const {agregarSuscripcion,getSuscriptionsId} = require('../../controllers/subcriptions');
 
 router.post('/suscriptions/',agregarSuscripcion);
-
+router.get('/suscriptions/:id',getSuscriptionsId);
 
 module.exports = router;

@@ -1,10 +1,34 @@
-const {Suscriptions, Suscriptions_categories} = require('../config/db.config');
+const {Suscriptions, Suscriptions_categories, Categories} = require('../config/db.config');
 
-const getSuscriptionsId = async (request, response) => {
+const getSuscriptionsId = async (request, response) => {    
+    
+    const idCategories = [];
+    let nameCategories = [];    
+
     try {
-        const suscription = await suscription.findOne({
-            where: { id: request.params.id }
+        const { id } = request.params;
+        const suscription = await Suscriptions.findOne({
+            where: { user_id: id }
         });
+        const categories = await Suscriptions_categories.findAll({
+            where: {suscription_id: suscription.id}
+        });
+
+        categories.map( (item) => {
+            const {categorie_id} = item.dataValues;            
+            idCategories.push(categorie_id);
+        });        
+        const nameCateg = await Categories.findAll({
+            where: {
+                id:idCategories
+            }
+        });        
+        nameCateg.map( ({dataValues}) => {                        
+             nameCategories.push(dataValues.categorie_name);                                   
+        });        
+        let {dataValues} = suscription;
+        dataValues.categorie_id = idCategories;
+        dataValues.categorie_name = nameCategories;        
         response.json(suscription);
     } catch (error) {
         response.json({error: `Error en suscripciones ${error}`});
