@@ -8,6 +8,8 @@ const apiDepartmentsRouter = require('./api/departments');
 const apiSearchRouter = require('./api/search');
 const apiSuscription = require('./api/suscriptions');
 const apiSuscriptionC = require('./api/subcripcategories');
+const apiComplaintRouter = require('./api/complaints');
+const apiReasonRouter = require('./api/reasons');
 
 router.use('/users', apiUsersRouter);
 router.use('/auth', apiAuthRouter);
@@ -18,4 +20,7 @@ router.use('/departments', apiDepartmentsRouter);
 router.use('/search', apiSearchRouter);
 router.use('/suscriptions', apiSuscription);
 router.use('/suscription',apiSuscriptionC);
+router.use('/complaints',apiComplaintRouter);
+router.use('/reasons', apiReasonRouter);
+
 module.exports = router;
