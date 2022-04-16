@@ -5,7 +5,7 @@ const { secret } = require('../config/auth.config');
 const { generarEmail, enviarEMail } = require('../helpers/email');
 
 
-const { Users } = require('../config/db.config');
+const { Users, Suscriptions } = require('../config/db.config');
 //const { where } = require('sequelize/types');
 
 
@@ -73,10 +73,22 @@ const userGetProfileMod = async(req, res = response) => {
     res.json({error:`Error al obtener los datos del perfil ${err}` });
     }
 }
+const deleteUser = async(req, res) =>{
+    const {id} = req.params;
+
+    try{
+        const user = await Users.destroy({where:{id}});
+        const suscrip = await Suscriptions.destroy({where:{user_id:id}});        
+        res.json(user);
+    }catch(err){
+        res.json({error:`Error al eliminar el usuario ${err}`});
+    }
+}
 
 module.exports = {
     userGetId,    
     forgot_Password,
     reset_Password,
-    userGetProfileMod
+    userGetProfileMod,
+    deleteUser
 }
