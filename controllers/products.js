@@ -231,7 +231,6 @@ const productsGetUser = async (req, res = response) => {
 
 const productsPostAdd = async (req, res = response) => {
     const t = await sequelize.transaction();
-
     try {
         const {
             product_name,
@@ -274,6 +273,7 @@ const productsPostAdd = async (req, res = response) => {
                 }
             }
         }
+
         if (ext) {
             image_type = 'image/' + ext;
         }
