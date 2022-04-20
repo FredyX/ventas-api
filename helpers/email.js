@@ -30,7 +30,7 @@ const generarEmailPDF = (emailDestino, pdfName) => {
         attachments: [
             {
                 filename: pdfName,
-                path: path.join(__dirname, '../output/'+pdfName),
+                path: path.join(__dirname, '../public/pdf/' + pdfName),
                 contentType: 'application/pdf'
             }
         ]

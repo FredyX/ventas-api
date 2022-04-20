@@ -5,6 +5,7 @@ const multer = require('multer');
 const path = require('path');
 const app = express();
 const cors = require('cors');
+const {startConcurrent} = require('./helpers/concurrent');
 
 require('./config/db.config');
 app.use(bodyParser.json({limit: '50mb'}));
@@ -38,17 +39,11 @@ const corsOptions = {
 // Enable preflight requests for all routes
 app.options('*', cors(corsOptions));
 
-// app.use(function(req, res, next) {
-//     res.header("status", 200 );
-//     res.header("Access-Control-Allow-Origin", "*");
-//     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-//     res.header("Access-Control-Allow-Credentials", "true");
-//     res.header("Access-Control-Allow-Headers", "X-Requested-With, Content-Type, Authorization, Content-Length, X-Requested-With, Accept, Origin, Cache-Control, Pragma, Expires, x-token");
-//     next();
-// });
 
 app.use('/api', cors(corsOptions), apiRouter);
 
 app.listen(3001, () => {
-    console.log('servidor arranco correctamente');
+    console.log('Server en puerto 3001');
 });
+
+startConcurrent();
