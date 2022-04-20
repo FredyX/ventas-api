@@ -10,6 +10,7 @@ const apiSuscription = require('./api/suscriptions');
 const apiSuscriptionC = require('./api/subcripcategories');
 const apiComplaintRouter = require('./api/complaints');
 const apiReasonRouter = require('./api/reasons');
+const apiReporteRouter = require('./api/reporters');
 
 router.use('/users', apiUsersRouter);
 router.use('/auth', apiAuthRouter);
@@ -22,5 +23,5 @@ router.use('/suscriptions', apiSuscription);
 router.use('/suscription',apiSuscriptionC);
 router.use('/complaints',apiComplaintRouter);
 router.use('/reasons', apiReasonRouter);
-
+router.use('/reporters', apiReporteRouter);
 module.exports = router;
