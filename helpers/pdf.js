@@ -48,7 +48,7 @@ const sendEmails = async (suscriptions) => {
     console.log('Enviando correos');
 
     for (let i = 0; i < suscriptions.length; i++) {
-        const pdf_name = Date.now() + suscriptions[i].user_id + 'swapper.pdf';
+        const pdf_name = "SWAPPER" + Date.now() + suscriptions[i].user_id + '.pdf';
         const pdf_path = path.join(__dirname, '../public/pdf/'+pdf_name); 
         const products = await loadProductsBySuscriptions(suscriptions[i]);
         const html = generarHTML(products);
@@ -94,6 +94,11 @@ const generarHTML = (products) => {
         }
         .producto h3 {
             color: rgb(18, 183, 0);
+            font-size: 2rem;
+            font-weight: bolder;
+        }
+        .producto h4 {
+            color: rgb(0, 0, 0);
             font-size: 1.3rem;
             font-weight: bolder;
         }
@@ -103,8 +108,10 @@ const generarHTML = (products) => {
         }
         .productos {
             column-count: 1;  
+
         }.producto P{
             color: rgb(0, 0, 255);
+            font-size: 1.5rem;
         }
         h1{
             text-align: center;
@@ -122,6 +129,8 @@ const generarHTML = (products) => {
                 <img src="${products[i].image_path}" alt="">
             </div>
             <h3>${products[i].product_name}</h3>
+            <h4> Lps. ${products[i].price}</h4>
+            <h4> Link: </h4>
             <P>${products[i].link}</P>
         </div>
         `;
