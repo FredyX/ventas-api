@@ -17,7 +17,35 @@ const categoriasMasVendidas = async(request, response) =>{
 	}
 }
 
+const categoriasMasSuscritas = async(request, response) => {
+	const queryMasSuscripciones = `select c.CATEGORIE_NAME as nombre,count(distinct s.ID) as cantidad from suscriptions s
+		join suscriptions_categories sc on sc.SUSCRIPTION_ID = s.ID 
+		join categories c on c.ID = sc.CATEGORIE_ID 
+		group by c.CATEGORIE_NAME;`;
+
+		try{
+			const datos = await sequelize.query(queryMasSuscripciones);
+			response.json(datos[0]);
+		}catch(err){
+			response.json({error:`erro al obtener el reporte ${err}`});
+		}
+	}
+const departamentosMasProductos = 	async(request, response) => {
+	const queryMasDepartamento = `select d.DEPARTMENT_NAME as nombre,count(distinct p.ID) as cantidad from products p
+		join departments d on d.ID = p.DEPARTMENT_ID
+		group by d.DEPARTMENT_NAME ;`;
+
+	try{
+		const datos = await sequelize.query(queryMasDepartamento);
+		response.json(datos[0]);
+	}catch(err)	{
+		response.json({error:`erro al obtener el reporte ${err}`});
+	}
+}
+
 
 module.exports = {
-	categoriasMasVendidas	
+	categoriasMasVendidas,
+	categoriasMasSuscritas,
+	departamentosMasProductos	
 }
