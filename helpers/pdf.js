@@ -5,7 +5,6 @@ const pdf = require('html-pdf');
 const path = require('path');
 const fs = require('fs');
 
-
 const loadSuscriptionsByDay = async (day) => {
     let r = [];
     const response1 = await Suscriptions.findAll({
@@ -13,6 +12,7 @@ const loadSuscriptionsByDay = async (day) => {
             preferred_day: day
         }
     });
+
 
     for (let i = 0; i < response1.length; i++) {
         const { id,
@@ -44,16 +44,14 @@ const loadSuscriptionsByDay = async (day) => {
     return r;
 }
 
-
 const sendEmails = async (suscriptions) => {
     console.log('Enviando correos');
 
     for (let i = 0; i < suscriptions.length; i++) {
-        const pdf_name = Date.now() + suscriptions[i].user_id + '.pdf';
+        const pdf_name = Date.now() + suscriptions[i].user_id + 'swapper.pdf';
         const pdf_path = path.join(__dirname, '../public/pdf/'+pdf_name); 
         const products = await loadProductsBySuscriptions(suscriptions[i]);
         const html = generarHTML(products);
-
 
         pdf.create(html).toFile(pdf_path, async (err, res) =>{
             if (err) return console.log(err);
@@ -104,8 +102,9 @@ const generarHTML = (products) => {
             margin-bottom: 1rem;
         }
         .productos {
-            column-count: 1;
-            margin-left: 36%;    
+            column-count: 1;  
+        }.producto P{
+            color: rgb(0, 0, 255);
         }
         h1{
             text-align: center;
