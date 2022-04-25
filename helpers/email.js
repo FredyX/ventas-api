@@ -26,7 +26,7 @@ const generarEmailPDF = (emailDestino, pdfName) => {
         from: "SWAPPER",
         to: emailDestino,
         subject: "Ofertas de la semana",
-        text: "Aqui le presentams las ofertas de la semana",
+        text: "Aqui le presentamos las ofertas de la semana",
         attachments: [
             {
                 filename: pdfName,

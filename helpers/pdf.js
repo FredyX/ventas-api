@@ -5,7 +5,6 @@ const pdf = require('html-pdf');
 const path = require('path');
 const fs = require('fs');
 
-
 const loadSuscriptionsByDay = async (day) => {
     let r = [];
     const response1 = await Suscriptions.findAll({
@@ -13,6 +12,7 @@ const loadSuscriptionsByDay = async (day) => {
             preferred_day: day
         }
     });
+
 
     for (let i = 0; i < response1.length; i++) {
         const { id,
@@ -44,16 +44,14 @@ const loadSuscriptionsByDay = async (day) => {
     return r;
 }
 
-
 const sendEmails = async (suscriptions) => {
     console.log('Enviando correos');
 
     for (let i = 0; i < suscriptions.length; i++) {
-        const pdf_name = Date.now() + suscriptions[i].user_id + '.pdf';
+        const pdf_name = "SWAPPER" + Date.now() + suscriptions[i].user_id + '.pdf';
         const pdf_path = path.join(__dirname, '../public/pdf/'+pdf_name); 
         const products = await loadProductsBySuscriptions(suscriptions[i]);
         const html = generarHTML(products);
-
 
         pdf.create(html).toFile(pdf_path, async (err, res) =>{
             if (err) return console.log(err);
@@ -96,6 +94,11 @@ const generarHTML = (products) => {
         }
         .producto h3 {
             color: rgb(18, 183, 0);
+            font-size: 2rem;
+            font-weight: bolder;
+        }
+        .producto h4 {
+            color: rgb(0, 0, 0);
             font-size: 1.3rem;
             font-weight: bolder;
         }
@@ -104,8 +107,11 @@ const generarHTML = (products) => {
             margin-bottom: 1rem;
         }
         .productos {
-            column-count: 1;
-            margin-left: 36%;    
+            column-count: 1;  
+
+        }.producto P{
+            color: rgb(0, 0, 255);
+            font-size: 1.5rem;
         }
         h1{
             text-align: center;
@@ -123,6 +129,8 @@ const generarHTML = (products) => {
                 <img src="${products[i].image_path}" alt="">
             </div>
             <h3>${products[i].product_name}</h3>
+            <h4> Lps. ${products[i].price}</h4>
+            <h4> Link: </h4>
             <P>${products[i].link}</P>
         </div>
         `;
