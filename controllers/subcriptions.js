@@ -53,7 +53,7 @@ const getSuscriptionsId = async (request, response) => {
 
 const actualizarSuscription = async (request, response) => {
     try{
-
+        
         const {
             user_id,
             department_id,
@@ -69,7 +69,8 @@ const actualizarSuscription = async (request, response) => {
             order_prior,
             min_seller_score,
             preferred_day
-        }        
+        }
+        console.log(suscripcion);                
         const {id:idS} = await Suscriptions.update(
                         suscripcion,{
                             where:{
@@ -83,16 +84,17 @@ const actualizarSuscription = async (request, response) => {
 }
 
 const actualizarSusCategories = async(request, response) =>{
-    const {suscription_id,categorie_id} = request.body;    
+    const {suscription_id,categorie_id} = request.body;        
     try{        
-        categorie_id.map( async(id) => {
-            await Suscriptions_categories.update({
-                categorie_id:id
-            },{
-                where:{
-                    suscription_id    
-                }                
-            });
+        Suscriptions_categories.destroy({
+            where:{
+                suscription_id
+            }
+        });
+        categorie_id.map( async(id) => {            
+            await Suscriptions_categories.create(
+                {suscription_id,categorie_id:id}
+            );
         });
         response.json({status:"Ok"});    
     }catch(err){
@@ -125,7 +127,8 @@ const agregarSuscripcion = async (request, response) => {
 
 const agregarSusCategories = async(request, response) => {
     const {suscription_id,categorie_id} = request.body;    
-    try{        
+    try{
+        console.log(categorie_id);
         categorie_id.map( async(id) => {
             await Suscriptions_categories.create({suscription_id, categorie_id:id});
         });
