@@ -24,20 +24,19 @@ const getCategoriesId = async (request, response) => {
 }
 
 const categoriesDelete = async (req, res = response) => {
-    const t = await sequelize.transaction();
+
     try {
         await Categories.destroy({
             where: {
                 id: req.params.id
             }
-        }, { transaction: t });
-        await t.commit();
+        });
+
         res.json({
             success: true,
             message: 'Categoria eliminado correctamente'
         });
     } catch (error) {
-        await t.rollback();
         res.json({
             success: false,
             message: 'Error al eliminar la categoria'

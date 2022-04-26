@@ -17,7 +17,7 @@ router.get('/:id', getCategoriesId);
 router.delete('/:id', [
     validateJwt,
     check('id').not().isEmpty().withMessage('El id es obligatorio'),
-    doCategoryIdExist,
+    check('id').custom(doCategoryIdExist),
     validateFields,
     validateAdmin,
 ], categoriesDelete);
