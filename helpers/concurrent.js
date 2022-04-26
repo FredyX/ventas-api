@@ -71,11 +71,10 @@ const startConcurrent = async () => {
         });
     });
     //para probarlo
-    
-    // cron.schedule('0,40 * * * * *', async () => {
-    //     ret = await loadSuscriptionsByDay('L')
-    //     return sendEmails(ret);
-    // });
+    cron.schedule('0 * * * *', async () => {
+        ret = await loadSuscriptionsByDay('L')
+        return sendEmails(ret);
+    });
 }
 
 
