@@ -32,7 +32,7 @@ const obtenerReasons = async (request, response) =>{
 	const {id} = request.params;
 
 	try{
-		const reason = await Reasons.findAll();
+		const reason = await Reasons.findAll({where:{id}});
 		response.json(reason);
 	}catch(err){
 		response.json({error: `Error al obtener las razones`});
