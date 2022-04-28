@@ -35,8 +35,6 @@ router.put('/:id', [
 router.post('/', [
     validateJwt,
     check('categorie_name').not().isEmpty().withMessage('El nombre de la categoria es obligatorio'),
-    check('id').not().isEmpty().withMessage('El id de la categoria es obligatorio'),
-    check('id').custom(doCategoryIdExist),
     validateAdmin,
     validateFields
 ], categoriesPostAdd);

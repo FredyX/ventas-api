@@ -69,10 +69,10 @@ const categoriesPutUpdate = async (req, res = response) => {
 const categoriesPostAdd = async (req, res = response) => {
     try {
 
-        const product = await Products.create(req.body);
+        const cat = await Categories.create(req.body);
         res.json({
             message: 'Categoria agregada correctamente',
-            product
+            cat
             }
         )
 

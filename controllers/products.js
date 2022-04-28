@@ -8,7 +8,7 @@ const { response, request } = require('express');
 const { Products, Images, Categories, Products_Categories, sequelize, Users, Departments } = require('../config/db.config');
 const moment = require('moment');
 
-const disktorage = multer.diskStorage({ destination: path.join(__dirname, '../public/images'), filename: (req, file, cb) => { cb(null, parseInt(Date.parse(req.body.date_added)/10000,10)+"-"+ req.body.user_seller_id + '-' + req.body.product_name + "." + req.body.ext); }, });
+const disktorage = multer.diskStorage({ destination: path.join(__dirname, '../public/images'), filename: (req, file, cb) => { cb(null, parseInt(Date.parse(req.body.date_added) / 10000, 10) + "-" + req.body.user_seller_id + '-' + req.body.product_name + "." + req.body.ext); }, });
 
 const fileUpload = multer({ storage: disktorage, limits: { fieldSize: 25 * 1024 * 1024 } }).single('file');
 
@@ -142,7 +142,7 @@ const obtenerImagenes = async (req, res) => {
 const productsGetIdDetalle = async (req, res = response) => {
     try {
         const idProducto = req.params.id;
-        const producto = await sequelize.query(`SELECT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id where products.id= ${idProducto}`, { type: QueryTypes.SELECT });
+        const producto = await sequelize.query(`SELECT products.id,product_name,product_description,price,state,is_selling,date_added,department_name, user_seller_id ,first_name,last_name,score FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id where products.id= ${idProducto}`, { type: QueryTypes.SELECT });
         const categorias = await sequelize.query(`
         select categories.id,categorie_name from categories inner join products_categories on categories.id = products_categories.categorie_id inner join products on products.id = products_categories.product_id where products.id = ${idProducto}`, { type: QueryTypes.SELECT });
         let imagenes = await Images.findAll({
@@ -243,8 +243,8 @@ const productsPostAdd = async (req, res = response) => {
             date_added,
             ext
         } = req.body;
-        
-        let datefinal= new moment(Date.parse(date_added));
+
+        let datefinal = new moment(Date.parse(date_added));
 
         const newProduct = {
             product_name,
@@ -278,16 +278,16 @@ const productsPostAdd = async (req, res = response) => {
             image_type = 'image/' + ext;
         }
         const img = fs.readFileSync(
-            path.join(__dirname, '../public/images/' +parseInt(Date.parse(date_added)/10000,10)+"-"+ user_seller_id + '-' + product_name + "." + ext));
+            path.join(__dirname, '../public/images/' + parseInt(Date.parse(date_added) / 10000, 10) + "-" + user_seller_id + '-' + product_name + "." + ext));
         const finalImg = {
             image_data: img,
             image_type: image_type,
-            image_name: parseInt(Date.parse(date_added)/10000,10)+"-"+user_seller_id + '-' + product_name + "." + ext,
+            image_name: parseInt(Date.parse(date_added) / 10000, 10) + "-" + user_seller_id + '-' + product_name + "." + ext,
             product_id: product.id
         };
         await Images.create(finalImg, { transaction: t });
 
-        fs.unlink(path.join(__dirname, '../public/images/'+parseInt(Date.parse(date_added)/10000,10)+"-" + user_seller_id + '-' + product_name + "." + ext), (err) => {
+        fs.unlink(path.join(__dirname, '../public/images/' + parseInt(Date.parse(date_added) / 10000, 10) + "-" + user_seller_id + '-' + product_name + "." + ext), (err) => {
             if (err) throw err;
             console.log('successfully deleted');
         });
@@ -313,15 +313,15 @@ const productsSearch = async (req, res = response) => {
         const { search, categories, departments, score } = req.params;
         let cat = '';
         let dep = '';
-        let srch = "'"+ " "+  "'";
+        let srch = "'" + " " + "'";
         let scr = '';
 
-        
-        if (search!='null') {
+
+        if (search != 'null') {
             console.log(search);
             srch = "'" + search + "'";
         }
-        
+
         if (categories == 'null') {
             cat = '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18';
         }
@@ -337,7 +337,7 @@ const productsSearch = async (req, res = response) => {
 
         if (score == 'null') {
             scr = 0;
-        }else{
+        } else {
             scr = score;
         }
 
@@ -347,13 +347,13 @@ const productsSearch = async (req, res = response) => {
         }
 
         const products = await sequelize.query(`SELECT DISTINCT products.id,product_name,product_description,price,state,is_selling,date_added,department_name,first_name,last_name,score, image_name,image_data FROM products join departments on products.department_id = departments.id join users on products.user_seller_id = users.id join images on images.product_id=products.id join products_categories on products.id = products_categories.product_id WHERE ((MATCH(product_name,product_description) AGAINST(${srch}) AND categorie_id in (${cat}) AND products.department_id in (${dep})) AND score >= ${scr}) ORDER BY MATCH(product_name,product_description) AGAINST(${srch}) DESC`, { type: QueryTypes.SELECT });
-        
+
         if (!products) return res.status(404).json({
             message: 'No se encontraron productos'
         });
-        
+
         let quantity = products.length;
-        
+
         let data = [];
 
         products.map(
@@ -371,9 +371,9 @@ const productsSearch = async (req, res = response) => {
         )
         res.json({
             data,
-            totalPages : Math.ceil(quantity / 9)
+            totalPages: Math.ceil(quantity / 9)
         });
-        
+
     } catch (error) {
         console.log(error);
         res.status(500).json({

@@ -11,22 +11,10 @@ const obtenerComplaints = async (request, response) =>{
 }
 
 const agregarComplaints = async (request, response) =>{
-    const {
-        reason_id,
-        complaint_description,
-        creator_user_id,
-        reported_user_id,
-        admin_user_id
-    } = request.body;
+    console.log(request.body);
         
     try{
-        const comp = await Complaints.create({
-        reason_id,
-        complaint_description,
-        creator_user_id,
-        reported_user_id,
-        admin_user_id
-    });        
+        const comp = await Complaints.create(request.body);        
         response.json(comp);
     } catch(err){
         response.json({error: `Error al crear la queja ${err}`});
