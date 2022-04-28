@@ -39,8 +39,17 @@ const obtenerReasons = async (request, response) =>{
 	}
 }
 
+const obtenerTodoReasons = async (request, response) =>{
+	try{
+		const reason = await Reasons.findAll();
+		response.json(reason);
+	}catch(err){
+		response.json({error:`Error al querer obtener todos las razones ${err}`});
+	}
+}
 module.exports = {
 	agregarReasons,
 	eliminarReasons,
-	obtenerReasons
+	obtenerReasons,
+	obtenerTodoReasons
 }
